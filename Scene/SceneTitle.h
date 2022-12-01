@@ -15,6 +15,7 @@ public:
 
 	//virtual bool isEnd()override { return m_isEnd; }
 private:
+	int m_freamCount;
 	//bool m_isEnd;
 };
 
