@@ -7,7 +7,7 @@ public:
 	SceneTitle();
 	virtual ~SceneTitle() {}
 
-	//virtual void init()override { m_isEnd = false; }
+	virtual void init()override { m_isEnd = false; }
 	void end()override {}
 
 	void update()override;
@@ -16,6 +16,6 @@ public:
 	//virtual bool isEnd()override { return m_isEnd; }
 private:
 	int m_freamCount;
-	//bool m_isEnd;
+	bool m_isEnd;
 };
 
