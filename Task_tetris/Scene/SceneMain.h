@@ -1,20 +1,23 @@
 #pragma once
 #include "SceneBase.h"
-class SceneMain :
-    public SceneBase
+
+class SceneMain : public SceneBase		//継承してクラスを作成
 {
 public:
 	SceneMain();
 	virtual ~SceneMain() {}
 
-	virtual void init()override { m_isEnd = false; }
-	virtual void end()override {}
+	//初期化
+	virtual void Init()override;
+	//終了処理
+	virtual void End()override {}
 
-	virtual void update()override;
-	virtual void draw() override;
+	//更新処理
+	virtual SceneBase* Update()override;
+	//描画処理
+	virtual void Draw() override;
 
-	virtual bool isEnd()override { return m_isEnd; }
 private:
-	bool m_isEnd;
+	
 };
 

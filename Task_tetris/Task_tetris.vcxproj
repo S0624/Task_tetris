@@ -141,20 +141,22 @@
   <ItemGroup>
     <ClCompile Include="InputState.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="UI\Pad.cpp" />
     <ClCompile Include="Scene\SceneBase.cpp" />
     <ClCompile Include="Scene\SceneMain.cpp" />
     <ClCompile Include="Scene\SceneManager.cpp" />
     <ClCompile Include="Scene\SceneTitle.cpp" />
-    <ClCompile Include="Vec2.cpp" />
+    <ClCompile Include="UI\Vec2.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="game.h" />
     <ClInclude Include="InputState.h" />
+    <ClInclude Include="UI\Pad.h" />
     <ClInclude Include="Scene\SceneBase.h" />
     <ClInclude Include="Scene\SceneMain.h" />
     <ClInclude Include="Scene\SceneManager.h" />
     <ClInclude Include="Scene\SceneTitle.h" />
-    <ClInclude Include="Vec2.h" />
+    <ClInclude Include="UI\Vec2.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
