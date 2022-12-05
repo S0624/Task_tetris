@@ -14,10 +14,13 @@ public:
 
 	//更新処理
 	virtual SceneBase* Update()override;
+	//フェード処理
+	virtual void Fead();
 	//描画処理
 	virtual void Draw() override;
 
 private:
-	int m_freamCount;
+	int m_fadeSpeed;				//フェード速度
+	int m_fadeColor;				//フェードカラー
 };
 
