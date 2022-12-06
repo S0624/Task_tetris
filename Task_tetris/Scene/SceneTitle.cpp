@@ -12,6 +12,7 @@ namespace
 }
 
 SceneTitle::SceneTitle() :
+	m_background(-1),										//フェード速度
 	m_fadeSpeed(-5),										//フェード速度
 	m_fadeColor(255)										//フェードカラー
 {
@@ -19,6 +20,7 @@ SceneTitle::SceneTitle() :
 
 void SceneTitle::Init()
 {
+	m_background = LoadGraph("data/bloc1.png");
 }
 
 
@@ -64,8 +66,12 @@ void SceneTitle::Fead()
 }
 void SceneTitle::Draw()
 {
-	DrawString((Game::kScreenWindth - GetDrawStringWidth(kNameTitle, -1)) / 2, 425, kNameTitle, GetColor(255, 255, 255));			//タイトル画面の表示
-	DrawString((Game::kScreenWindth - GetDrawStringWidth(kNameGuide, -1)) / 2, 500, kNameGuide, GetColor(255, 255, 255));			//タイトルガイドの表示
+	DrawGraph(0, 0, m_background, false);
+	
+	SetFontSize(40);						//フォントのサイズ変更
+	DrawString((Game::kScreenWindth - GetDrawStringWidth(kNameTitle, -1)) / 2, 425, kNameTitle, GetColor(255, 0, 0));			//タイトル画面の表示
+	SetFontSize(25);						//フォントのサイズ変更
+	DrawString((Game::kScreenWindth - GetDrawStringWidth(kNameGuide, -1)) / 2, 500, kNameGuide, GetColor(255, 0, 0));			//タイトルガイドの表示
 
 	SetDrawBlendMode(DX_BLENDMODE_MULA, m_fadeColor);				//フェード
 	DrawBox(0, 0, 1280, 720, GetColor(0, 0, 0), true);				//かぶせる色

@@ -20,6 +20,7 @@ public:
 	virtual void Draw() override;
 
 private:
+	int m_background;
 	int m_fadeSpeed;				//フェード速度
 	int m_fadeColor;				//フェードカラー
 };
