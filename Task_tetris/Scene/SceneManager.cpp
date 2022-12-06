@@ -1,12 +1,14 @@
 #include<assert.h>
 #include "SceneManager.h"
 #include"SceneTitle.h"
+#include"SceneMain.h"
 #include"UI/Pad.h"
 
 SceneManager::SceneManager() :
 	m_pScene(nullptr)
 {
-	m_pScene = new SceneTitle;
+	//m_pScene = new SceneTitle;
+	m_pScene = new SceneMain;
 }
 
 SceneManager::~SceneManager()
