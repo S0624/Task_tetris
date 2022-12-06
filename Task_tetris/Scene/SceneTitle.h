@@ -10,7 +10,7 @@ public:
 	//‰Šú‰»
 	virtual void Init()override;
 	//I—¹ˆ—
-	virtual void End()override {}
+	virtual void End()override;
 
 	//XVˆ—
 	virtual SceneBase* Update()override;
