@@ -11,8 +11,9 @@ namespace
 	//constexpr int kFieldWindth = 100;
 	constexpr int kBlocHeight = 20;				//fieldの高さ
 	constexpr int kBlocWindht = 10;				//fieldの横幅
+	constexpr int kFieldFloor = 570;			//fieldの下
 
-	constexpr int kFrameTimer = 75;
+	constexpr int kFrameTimer = 50;
 
 	int field[kBlocHeight][kBlocWindht];
 	
@@ -43,25 +44,28 @@ SceneMain::SceneMain():
 void SceneMain::Init()
 {
 	m_frametimer = kFrameTimer;					//タイマーを設定
-	for (int i = 0; i <= kBlocHeight; i++)
+	for (int i = 0; i < kBlocHeight; i++)
 	{
-		for (int j = 0; j <= kBlocWindht; j++)
+		for (int j = 0; j < kBlocWindht; j++)
 		{
-			//field[j][i] = 0;
+			field[j][i] = 0;
 			//field[j][i] = empty;
 		}
 	}
-	//field[1][1] = input;
+	
 
-	//for (int i = 0; i <= kBlocHeight; i++)
+	//for (int i = 0; i < kBlocHeight; i++)
 	//{
-	//	for (int j = 0; j <= kBlocWindht; j++)
+	//	printfDx("\n");
+	//	for (int j = 0; j < kBlocWindht; j++)
 	//	{
 	//		switch (field[j][i])
 	//		{
-	//		case empty:
+	//		case 0:
+	//			printfDx("%d",j);
 	//			break;
-	//		case input:
+	//		case 1:
+	//			printfDx("8");
 	//		default:
 	//			break;
 	//		}
@@ -84,9 +88,9 @@ void SceneMain::MoveUpdate()
 	{
 		m_pos.x += m_size.x;						//キーが押されたら押された方向に動く
 		//m_pos.x += m_size.x;						//キーが押されたら押された方向に動く
-		if (m_pos.x > 300)
+		if (m_pos.x > 270)
 		{
-			m_pos.x = 300;
+			m_pos.x = 270;
 		}
 	}
 
@@ -96,7 +100,7 @@ void SceneMain::MoveUpdate()
 	}
 	if (Pad::isTrigger(PAD_INPUT_UP))				//上の移動処理
 	{
-		m_pos.y = 600;								//キーが押されたら一瞬で下まで
+		m_pos.y = kFieldFloor;								//キーが押されたら一瞬で下まで
 	}
 
 	if (Pad::isPress(PAD_INPUT_DOWN))				//下の移動処理
@@ -114,9 +118,9 @@ void SceneMain::MoveUpdate()
 		m_pos.y += m_gravity;
 		m_frametimer = kFrameTimer;					//落下させたらタイマーの数値を元に戻す
 	}
-	if (m_pos.y > 600)								//fieldから出ないように設定
+	if (m_pos.y > kFieldFloor)								//fieldから出ないように設定
 	{
-		m_pos.y = 600;
+		m_pos.y = kFieldFloor;
 	}
 
 
@@ -125,13 +129,12 @@ void SceneMain::MoveUpdate()
 	//x = static_cast<int>(m_pos.x / m_size.x);
 	
 	
-	y = (m_pos.y / m_size.y);
-	x = (m_pos.x / m_size.x);
+	y = m_pos.y / m_size.y;
+	x = m_pos.x / m_size.x;
 	
-	if (m_pos.y == 600)								//
+	if (m_pos.y == kFieldFloor)								//
 	{
-		
-		//field[static_cast<int>(y)][static_cast<int>(x)] = 1;
+		field[19][1] = 1;
 	}
 }
 
@@ -145,17 +148,17 @@ void SceneMain::Draw()
 {
 	//DrawBox(kFieldWindth, kFieldHeight + 30, 430, 705, GetColor(255, 255, 255), false);					//fieldの枠
 	//DrawBox(kFieldWindth, kFieldHeight, 430, 705, GetColor(255, 255, 255), false);					//fieldの枠
-	DrawBox(kFieldWindth, kFieldHeight, 330, 630, GetColor(255, 255, 255), false);					//fieldの枠
+	DrawBox(kFieldWindth, kFieldHeight, 300, 600, GetColor(255, 255, 255), false);					//fieldの枠
 
 	DrawBox(static_cast<int>(m_pos.x + 2), static_cast<int>(m_pos.y + 2),						//ミノの表示
 		static_cast<int>(m_pos.x + m_size.x - 2), static_cast<int>(m_pos.y + m_size.y - 2),
 		GetColor(0, 255, 255), false);
 
-	for (int i = 0; i <= kBlocHeight; i++)
+	for (int i = 0; i < kBlocHeight; i++)
 	{
-		DrawFormatString(kFieldWindth, kFieldHeight + (i * 30), GetColor(255, 255, 255), " %d", i);
 		//DrawFormatString(kFieldWindth, kFieldHeight + (i * 30), GetColor(255, 255, 255), " %d", i);
-		for (int j = 0; j <= kBlocWindht; j++)
+		DrawFormatString(kFieldWindth, kFieldHeight + (i * 30), GetColor(255, 255, 255), " %d", i);
+		for (int j = 0; j < kBlocWindht; j++)
 		{
 			DrawFormatString(kFieldWindth + (j * 30), kFieldHeight, GetColor(255, 255, 255), " %d", j);
 		}
@@ -164,7 +167,7 @@ void SceneMain::Draw()
 	DrawFormatString(600, 0, GetColor(255, 255, 255), " {x %d,y %d}", static_cast<int>(m_pos.x / 30), static_cast<int>(m_pos.y / 30));		//座標
 	DrawFormatString(600, 75, GetColor(255, 255, 255), " {x %d,y %d}", static_cast<int>(x), static_cast<int>(y));		//座標
 	DrawFormatString(600, 100, GetColor(255, 255, 255), " y %d", y);		//座標
-	DrawFormatString(600, 125, GetColor(255, 255, 255), " x %d", x);		//座標
+	//DrawFormatString(600, 125, GetColor(255, 255, 255), " x %d", x);		//座標
 	
 	///////////////////////////////////////
 	if (field[y][x] == 1)
