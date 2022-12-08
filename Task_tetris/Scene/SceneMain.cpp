@@ -34,14 +34,7 @@ SceneMain::SceneMain():
 	m_placed(false),
 	m_minotimer()
 {
-	m_pos.x = 150;								//初期位置
-	m_pos.y = 0;								//初期位置
-	//m_pos.x = 250;
-	//m_pos.y = 75;
-	m_size.x = 30;								//初期サイズ
-	m_size.y = 30;								//初期サイズ
-	m_gravity = 15;								//重力
-	m_speed = 2.5f;								//スピード
+	MinoInit();
 }
 
 void SceneMain::Init()
@@ -58,6 +51,17 @@ void SceneMain::Init()
 }
 
 
+void SceneMain::MinoInit()
+{
+	m_pos.x = 150;								//初期位置
+	m_pos.y = 0;								//初期位置
+	m_size.x = 30;								//初期サイズ
+	m_size.y = 30;								//初期サイズ
+	m_gravity = m_size.y / 2;								//重力
+	m_speed = 2.5f;								//スピード
+	m_placed = false;
+}
+
 void SceneMain::MoveUpdate()
 {
 	m_coordinateY = m_pos.y / m_size.y;
@@ -65,6 +69,7 @@ void SceneMain::MoveUpdate()
 
 	if (m_pos.y == kFieldFloor)								//
 	{
+		MinoInit();
 		if (m_minotimer > 0)
 		{
 			m_minotimer--;
@@ -94,14 +99,14 @@ void SceneMain::MoveUpdate()
 		}
 	}
 
-	if (m_pos.y > 570)								//fieldから出ないように設定
+	if (m_pos.y >= 570)								//field下から出ないように設定
 	{
 		m_pos.y = 570;
 	}
 	if (Pad::isTrigger(PAD_INPUT_UP))				//上の移動処理
 	{
 		m_pos.y = kFieldFloor;						//キーが押されたら一瞬で下まで
-		m_minotimer = 0;
+		m_placed = true;
 	}
 
 	if (Pad::isPress(PAD_INPUT_DOWN))				//下の移動処理
@@ -119,12 +124,11 @@ void SceneMain::MoveUpdate()
 		m_pos.y += m_gravity;
 		m_frametimer = kFrameTimer;					//落下させたらタイマーの数値を元に戻す
 	}
-
 }
 
 SceneBase* SceneMain::Update()
 {
-	if (!m_placed)
+	if (m_placed == false)
 	{
 		MoveUpdate();									//ミノの移動処理
 	}

@@ -18,6 +18,8 @@ public:
 	//終了処理
 	virtual void End()override {}
 
+	//ミノの初期化処理
+	virtual void MinoInit();
 	//ミノの移動処理
 	virtual void MoveUpdate();
 	//ミノが置かれたかどうか
