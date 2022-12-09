@@ -7,10 +7,8 @@ namespace
 {
 	constexpr int kFieldHeight = 0;				//fieldの大きさ
 	constexpr int kFieldWindth = 0;				//fieldの大きさ
-	//constexpr int kFieldHeight = 75;
-	//constexpr int kFieldWindth = 100;
-	constexpr int kBlocHeight = 20;				//fieldの高さ
-	constexpr int kBlocWindht = 10;				//fieldの横幅
+	constexpr int kBlocHeight = 21;				//fieldの高さ
+	constexpr int kBlocWindht = 12;				//fieldの横幅
 	constexpr int kFieldFloor = 570;			//fieldの下
 
 	constexpr int kFrameTimer = 50;
@@ -45,7 +43,43 @@ void SceneMain::Init()
 	{
 		for (int j = 0; j < kBlocWindht; j++)
 		{
-			field[j][i] = 0;
+			field[j][i] = empty;
+
+		}
+	}
+	for (int i = 0; i < kBlocHeight; i++)
+	{
+		//field[0][i] = frame;
+	}
+
+	for (int j = 0; j < kBlocWindht; j++)
+	{
+		//field[j][19] = frame;
+	}
+	//for (int i = 0; i < kBlocWindht; i++)
+	//{
+	//	printfDx(" %d",i);
+	//}
+	//printfDx("\n");
+	for (int i = 0; i < kBlocHeight; i++)
+	{
+		//printfDx("%d", i);
+		printfDx("\n");
+		for (int j = 0; j < kBlocWindht; j++)
+		{
+			switch (field[j][i])
+			{
+			case empty:
+				//DrawString(i, j, "ﾇﾝ",GetColor(255, 255, 255));
+				printfDx("　");
+			default:
+				break;
+			case input:
+				printfDx("■");
+			case frame:
+				printfDx("□");
+				break;
+			}
 		}
 	}
 }
@@ -69,7 +103,7 @@ void SceneMain::MoveUpdate()
 
 	if (m_pos.y == kFieldFloor)								//
 	{
-		MinoInit();
+		//MinoInit();
 		if (m_minotimer > 0)
 		{
 			m_minotimer--;
@@ -77,61 +111,67 @@ void SceneMain::MoveUpdate()
 		}
 		if (m_minotimer <= 0)
 		{
-			m_placed = true;
 			field[m_coordinateY][m_coordinateX] = 1;
+			m_placed = true;
 		}
 	}
 
-	if (Pad::isTrigger(PAD_INPUT_LEFT))				//左の移動処理、移動制限
-	{
-		m_pos.x -= m_size.x;						//キーが押されたら押された方向に動く
-		if (m_pos.x < 0)
-		{
-			m_pos.x = 0;
-		}
-	}
-	if (Pad::isTrigger(PAD_INPUT_RIGHT))			//右の移動処理、移動制限
-	{
-		m_pos.x += m_size.x;						//キーが押されたら押された方向に動く
-		if (m_pos.x > 270)
-		{
-			m_pos.x = 270;
-		}
-	}
+	//if (Pad::isTrigger(PAD_INPUT_LEFT))				//左の移動処理、移動制限
+	//{
+	//	m_pos.x -= m_size.x;						//キーが押されたら押された方向に動く
+	//	if (m_pos.x < 0)
+	//	{
+	//		m_pos.x = 0;
+	//	}
+	//}
+	//if (Pad::isTrigger(PAD_INPUT_RIGHT))			//右の移動処理、移動制限
+	//{
+	//	m_pos.x += m_size.x;						//キーが押されたら押された方向に動く
+	//	if (m_pos.x > 270)
+	//	{
+	//		m_pos.x = 270;
+	//	}
+	//}
+	//
+	//if (m_pos.y >= 570)								//field下から出ないように設定
+	//{
+	//	m_pos.y = 570;
+	//}
+	//if (Pad::isTrigger(PAD_INPUT_UP))				//上の移動処理
+	//{
+	//	m_pos.y = kFieldFloor;						//キーが押されたら一瞬で下まで
+	//	m_placed = true;
+	//}
+	//
+	//if (Pad::isPress(PAD_INPUT_DOWN))				//下の移動処理
+	//{
+	//	m_pos.y += m_speed;							//キーが押されたら押された方向に動く
+	//	return;										//押されている間はフレームタイマーの処理をスキップする
+	//}
+	//
+	//if (m_frametimer > 0)							//下キーが押されていないときはタイマーの数を減らす
+	//{
+	//	m_frametimer--;
+	//}
+	//if (m_frametimer == 0)							//タイマーがゼロになったら落下させる
+	//{
+	//	m_pos.y += m_gravity;
+	//	m_frametimer = kFrameTimer;					//落下させたらタイマーの数値を元に戻す
+	//}
+	//if (m_pos.y >= 570)								//field下から出ないように設定
+	//{
+	//	m_pos.y = 570;
+	//}
 
-	if (m_pos.y >= 570)								//field下から出ないように設定
-	{
-		m_pos.y = 570;
-	}
-	if (Pad::isTrigger(PAD_INPUT_UP))				//上の移動処理
-	{
-		m_pos.y = kFieldFloor;						//キーが押されたら一瞬で下まで
-		m_placed = true;
-	}
-
-	if (Pad::isPress(PAD_INPUT_DOWN))				//下の移動処理
-	{
-		m_pos.y += m_speed;							//キーが押されたら押された方向に動く
-		return;										//押されている間はフレームタイマーの処理をスキップする
-	}
-
-	if (m_frametimer > 0)							//下キーが押されていないときはタイマーの数を減らす
-	{
-		m_frametimer--;
-	}
-	if (m_frametimer == 0)							//タイマーがゼロになったら落下させる
-	{
-		m_pos.y += m_gravity;
-		m_frametimer = kFrameTimer;					//落下させたらタイマーの数値を元に戻す
-	}
 }
 
 SceneBase* SceneMain::Update()
 {
-	if (m_placed == false)
+	//if (m_placed == false)
 	{
 		MoveUpdate();									//ミノの移動処理
 	}
+
 	return this;
 }
 void SceneMain::Draw()
@@ -150,25 +190,22 @@ void SceneMain::Draw()
 		GetColor(0, 255, 255), false);
 	}
 
-	DrawBox(kFieldWindth - 2, kFieldHeight - 2, 300 + 2, 600 + 2, GetColor(255, 255, 255), false);					//fieldの枠
-
-
-
 
 	///////////////////////////////////////
 	///        確認用の数値表示         ///
 	///////////////////////////////////////
 
+	//DrawString(1, 1, "ﾇﾝ", GetColor(255, 255, 255));
 
-	for (int i = 0; i < kBlocHeight; i++)
-	{
-		//DrawFormatString(kFieldWindth, kFieldHeight + (i * 30), GetColor(255, 255, 255), " %d", i);
-		DrawFormatString(kFieldWindth, kFieldHeight + (i * 30), GetColor(255, 255, 255), " %d", i);
-		for (int j = 0; j < kBlocWindht; j++)
-		{
-			DrawFormatString(kFieldWindth + (j * 30), kFieldHeight, GetColor(255, 255, 255), " %d", j);
-		}
-	}
+	//for (int i = 0; i < kBlocHeight; i++)
+	//{
+	//	//DrawFormatString(kFieldWindth, kFieldHeight + (i * 30), GetColor(255, 255, 255), " %d", i);
+	//	DrawFormatString(kFieldWindth, kFieldHeight + (i * 30), GetColor(255, 255, 255), " %d", i);
+	//	for (int j = 0; j < kBlocWindht; j++)
+	//	{
+	//		DrawFormatString(kFieldWindth + (j * 30), kFieldHeight, GetColor(255, 255, 255), " %d", j);
+	//	}
+	//}
 
 	//DrawFormatString(500, 0, GetColor(255, 255, 255), " %d", m_frametimer);
 	DrawFormatString(600, 0, GetColor(255, 255, 255), " {x %d,y %d}", static_cast<int>(m_pos.x / 30), static_cast<int>(m_pos.y / 30));		//座標

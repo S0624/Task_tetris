@@ -3,11 +3,12 @@
 #include"UI/Vec2.h"
 class SceneMain : public SceneBase		//Œp³‚µ‚ÄƒNƒ‰ƒX‚ğì¬
 {
-//public:
-//	typedef enum state {
-//		empty = 0,
-//		input = 1
-//	};
+public:
+	typedef enum state {
+		empty = 0,
+		input = 1,
+		frame = 9
+	};
 
 public:
 	SceneMain();
