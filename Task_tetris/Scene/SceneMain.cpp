@@ -72,10 +72,10 @@ void SceneMain::MinoInit()
 
 void SceneMain::MoveUpdate()
 {
-	m_coordinateY = m_pos.y  / m_size.y;
+	m_coordinateY = (m_pos.y - 25) / m_size.y;
 	m_coordinateX = (m_pos.x - kFieldDisplace) / m_size.x;
 
-	if (m_pos.y == kFieldFloor)								//
+	if (m_pos.y == 546 - m_size.y)								//
 	{
 		//MinoInit();
 		if (m_minotimer > 0)
@@ -85,7 +85,7 @@ void SceneMain::MoveUpdate()
 		}
 		if (m_minotimer <= 0)
 		{
-			field[m_coordinateY][m_coordinateX] = 1;
+			field[m_coordinateY][m_coordinateX] = input;
 			m_placed = true;
 		}
 	}
@@ -151,7 +151,6 @@ SceneBase* SceneMain::Update()
 }
 void SceneMain::Draw()
 {
-
 	for (int i = 0; i < kBlocHeight; i++)
 	{
 		for (int j = 0; j < kBlocWindht; j++)
@@ -159,8 +158,9 @@ void SceneMain::Draw()
 			switch (field[j][i])
 			{
 			case empty:
-				DrawFormatString(kFieldDisplace + j + (j * 25), 25 + i + (i * 25), GetColor(255, 255, 255), "■", j);
-				//DrawString(kFieldDisplace + j + (j * 25), 25 + i + (i * 25), "■", GetColor(255, 255, 255));
+				//DrawFormatString(kFieldDisplace + j + (j * 25), 25 + i + (i * 25), GetColor(255, 255, 255), "■", j);
+				//DrawFormatString(kFieldDisplace + j + (j * 25), 25 + i + (i * 25), GetColor(255, 255, 255), "%d", i);
+				DrawString(kFieldDisplace + j + (j * 25), 25 + i + (i * 25), "　", GetColor(255, 255, 255));
 			default:
 				break;
 			case input:
@@ -204,16 +204,17 @@ void SceneMain::Draw()
 	//	}
 	//}
 
-	//DrawFormatString(500, 0, GetColor(255, 255, 255), " %d", m_frametimer);
-	DrawFormatString(600, 0, GetColor(255, 255, 255), " {x %d,y %d}", static_cast<int>(m_pos.x / 30), static_cast<int>(m_pos.y / 30));		//座標
+	DrawFormatString(500, 0, GetColor(255, 255, 255), " %d", m_frametimer);
+	DrawFormatString(550, 0, GetColor(255, 255, 255), " %d", m_minotimer);
+	DrawFormatString(600, 0, GetColor(255, 255, 255), " {x %d,y %d}", static_cast<int>(m_pos.x / 26), static_cast<int>(m_pos.y / 26));		//座標
 	DrawFormatString(600, 75, GetColor(255, 255, 255), " {x %d,y %d}", static_cast<int>(m_coordinateX), static_cast<int>(m_coordinateY));		//座標
 	DrawFormatString(600, 100, GetColor(255, 255, 255), " y %d", m_coordinateY);		//座標
-	DrawFormatString(600, 125, GetColor(255, 255, 255), " m:x %f", m_pos.x);		//座標
-
-	if (field[m_coordinateY][m_coordinateX] == 1)
+	
+	if (field[m_coordinateY][m_coordinateX] == input)
 	{
 		DrawFormatString(600, 50, GetColor(255, 255, 255), " %d", 1);
 	}
+
 	if (Placed() == true)
 	{
 		DrawFormatString(700, 300, GetColor(255, 255, 255), " a");		//座標
