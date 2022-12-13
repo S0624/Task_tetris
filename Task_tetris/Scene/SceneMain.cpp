@@ -7,19 +7,21 @@ namespace
 {
 	constexpr int kFieldHeight = 0;				//fieldの大きさ
 	constexpr int kFieldWindth = 0;				//fieldの大きさ
-	constexpr int kBlocHeight = 21;				//fieldの高さ
+	constexpr int kBlocHeight = 22;				//fieldの高さ
 	constexpr int kBlocWindht = 12;				//fieldの横幅
 	constexpr int kFieldFloor = 570;			//fieldの下
 	constexpr int kFieldDisplace = 50;			//fieldをずらす
 
 
-	constexpr int kFrameTimer = 50;
-	constexpr int kMinoTimer = 10;
+	constexpr int kFrameTimer = 50;				//ミノが落下するインターバル
+	constexpr int kMinoTimer = 5;				//ミノが設置されるまでの時間
 
-	int field[kBlocWindht][kBlocHeight];
+	int field[kBlocWindht][kBlocHeight];		//fieldの設置
 	
 	int m_coordinateX = 0;
 	int m_coordinateY = 0;
+
+	bool isEnd = false;
 }
 
 SceneMain::SceneMain():
@@ -54,7 +56,7 @@ void SceneMain::Init()
 	}
 	for (int j = 0; j < kBlocWindht; j++)
 	{
-		field[j][20] = frame;
+		field[j][21] = frame;
 	}
 }
 
@@ -75,52 +77,54 @@ void SceneMain::MoveUpdate()
 	m_coordinateY = (m_pos.y - 25) / m_size.y;
 	m_coordinateX = (m_pos.x - kFieldDisplace) / m_size.x;
 
-	if (m_pos.y == 546 - m_size.y)								//
+	if (m_placed == true)								//	ミノの設置処理
 	{
-		//MinoInit();
 		if (m_minotimer > 0)
 		{
 			m_minotimer--;
 			return;
 		}
-		if (m_minotimer <= 0)
-		{
-			field[m_coordinateY][m_coordinateX] = input;
-			m_placed = true;
-		}
 	}
 
 	if (Pad::isTrigger(PAD_INPUT_LEFT))				//左の移動処理、移動制限
 	{
-		m_pos.x -= m_size.x;						//キーが押されたら押された方向に動く
-		if (m_pos.x < kFieldDisplace + m_size.x)
+		if (field[m_coordinateX - 1][m_coordinateY] == empty)
 		{
-			m_pos.x = kFieldDisplace + m_size.x;
+			m_pos.x -= m_size.x;						//キーが押されたら押された方向に動く
 		}
 	}
 	if (Pad::isTrigger(PAD_INPUT_RIGHT))			//右の移動処理、移動制限
 	{
-		m_pos.x += m_size.x;						//キーが押されたら押された方向に動く
-		if (m_pos.x > 336 - m_size.x)
+		if (field[m_coordinateX + 1][m_coordinateY] == empty)
 		{
-			m_pos.x = 336 - m_size.x;
+			m_pos.x += m_size.x;
 		}
 	}
 	
-	if (m_pos.y >= 546 - m_size.y)								//field下から出ないように設定
+	if (field[m_coordinateX][m_coordinateY + 1] != empty)								//field下から出ないように設定
 	{
-		m_pos.y = 546 - m_size.y;
+		m_placed = true;
+		return;
+	}						
 
-	}
 	if (Pad::isTrigger(PAD_INPUT_UP))				//上の移動処理
 	{
-		m_pos.y = kFieldFloor;						//キーが押されたら一瞬で下まで
-		m_placed = true;
+		for (int i = kBlocHeight; i > 0; i--)
+		{
+			if (field[m_coordinateX][i - 1] == empty)
+			{
+				m_pos.y = i + (i * 25);				//置ける場所のチェック
+				break;
+			}
+		}
 	}
 	
 	if (Pad::isPress(PAD_INPUT_DOWN))				//下の移動処理
 	{
-		m_pos.y += m_speed;							//キーが押されたら押された方向に動く
+		if (field[m_coordinateX][m_coordinateY + 1] == empty)
+		{
+			m_pos.y += m_speed;							//キーが押されたら押された方向に動く
+		}
 		return;										//押されている間はフレームタイマーの処理をスキップする
 	}
 	
@@ -133,18 +137,38 @@ void SceneMain::MoveUpdate()
 		m_pos.y += m_gravity;
 		m_frametimer = kFrameTimer;					//落下させたらタイマーの数値を元に戻す
 	}
-	if (m_pos.y >= 546 - m_size.y)								//field下から出ないように設定
-	{
-		m_pos.y = 546 - m_size.y;
-	}
-
 }
 
 SceneBase* SceneMain::Update()
 {
-	//if (m_placed == false)
+	if (m_minotimer <= 0)
+	{
+		field[m_coordinateX][m_coordinateY] = input;
+		m_placed = false;
+		m_minotimer = kMinoTimer;
+		MinoInit();
+	}
+
+	for (int j = 1; j < kBlocWindht - 1; j++)
+	{
+		if (field[j][0] != empty)
+		{
+			isEnd = true;
+		}
+	}
+	if (isEnd == false)
 	{
 		MoveUpdate();									//ミノの移動処理
+	}
+
+	for (int j = 1; j < kBlocWindht - 1; j++)
+	{
+		if (field[1][20] == input && field[2][20] == input && field[3][20] == input
+			&& field[4][20] == input && field[5][20] == input && field[6][20] == input
+			&& field[7][20] == input && field[8][20] == input && field[9][20] == input && field[10][20] == input)
+		{
+			field[j][20] = empty;
+		}
 	}
 
 	return this;
@@ -158,13 +182,10 @@ void SceneMain::Draw()
 			switch (field[j][i])
 			{
 			case empty:
-				//DrawFormatString(kFieldDisplace + j + (j * 25), 25 + i + (i * 25), GetColor(255, 255, 255), "■", j);
-				//DrawFormatString(kFieldDisplace + j + (j * 25), 25 + i + (i * 25), GetColor(255, 255, 255), "%d", i);
 				DrawString(kFieldDisplace + j + (j * 25), 25 + i + (i * 25), "　", GetColor(255, 255, 255));
 			default:
 				break;
 			case input:
-				//DrawString(i + (i * 30), j + (i * 30), " ■", GetColor(255, 255, 255));
 				DrawString(kFieldDisplace + j + (j * 25), 25 + i + (i * 25), "■", GetColor(255, 255, 255));
 				break;
 			case frame:
@@ -175,52 +196,19 @@ void SceneMain::Draw()
 	}
 
 	DrawString(m_pos.x, m_pos.y, "■",GetColor(255, 0, 0));
-	//if (Placed())
-	//{
-	//	DrawBox(static_cast<int>(m_pos.x), static_cast<int>(m_pos.y),						//ミノの表示
-	//		static_cast<int>(m_pos.x + m_size.x), static_cast<int>(m_pos.y + m_size.y),
-	//		GetColor(255, 0, 0), false);
-	//}
 
-	//if (!Placed())
-	//{
-	//	DrawBox(static_cast<int>(m_pos.x), static_cast<int>(m_pos.y),						//ミノの表示
-	//	static_cast<int>(m_pos.x + m_size.x), static_cast<int>(m_pos.y + m_size.y),
-	//	GetColor(0, 255, 255), false);
-	//}
 
 
 	///////////////////////////////////////
 	///        確認用の数値表示         ///
 	///////////////////////////////////////
 
-	//for (int i = 0; i < kBlocHeight; i++)
-	//{
-	//	//DrawFormatString(kFieldWindth, kFieldHeight + (i * 30), GetColor(255, 255, 255), " %d", i);
-	//	DrawFormatString(kFieldWindth, kFieldHeight + (i * 30), GetColor(255, 255, 255), " %d", i);
-	//	for (int j = 0; j < kBlocWindht; j++)
-	//	{
-	//		DrawFormatString(kFieldWindth + (j * 30), kFieldHeight, GetColor(255, 255, 255), " %d", j);
-	//	}
-	//}
-
-	DrawFormatString(500, 0, GetColor(255, 255, 255), " %d", m_frametimer);
-	DrawFormatString(550, 0, GetColor(255, 255, 255), " %d", m_minotimer);
-	DrawFormatString(600, 0, GetColor(255, 255, 255), " {x %d,y %d}", static_cast<int>(m_pos.x / 26), static_cast<int>(m_pos.y / 26));		//座標
-	DrawFormatString(600, 75, GetColor(255, 255, 255), " {x %d,y %d}", static_cast<int>(m_coordinateX), static_cast<int>(m_coordinateY));		//座標
-	DrawFormatString(600, 100, GetColor(255, 255, 255), " y %d", m_coordinateY);		//座標
-	
-	if (field[m_coordinateY][m_coordinateX] == input)
+	if (isEnd == false)
 	{
-		DrawFormatString(600, 50, GetColor(255, 255, 255), " %d", 1);
+		DrawString(500, 0, "GamePlay", GetColor(255, 0, 0));
 	}
-
-	if (Placed() == true)
+	if (isEnd == true)
 	{
-		DrawFormatString(700, 300, GetColor(255, 255, 255), " a");		//座標
-	}
-	if (Placed() == false)
-	{
-		DrawFormatString(700, 300, GetColor(255, 255, 255), " b");		//座標
+		DrawString(500, 0, "GameOver", GetColor(255, 0, 0));
 	}
 }
