@@ -22,6 +22,7 @@ namespace
 	int kCoordinateY = 0;						//現在地から座標を取得する
 
 	bool kIsEnd = false;						//ゲームの終了フラグ
+	int kSuspend = 30;							//ミノが消されて上のミノが落ちてくるまでの時間
 
 }
 
@@ -32,7 +33,8 @@ SceneMain::SceneMain():
 	m_gravity(),								//ミノの重力
 	m_speed(),									//ミノの落下スピード
 	m_placed(false),							//置かれたかどうか
-	m_minotimer()								//ミノが下まで行って置かれるまでのインターバル
+	m_minotimer(),								//ミノが下まで行って置かれるまでのインターバル
+	m_suspend()									//ミノが消されてから落下するまでのタイマー
 {
 	MinoInit();
 }
@@ -142,12 +144,20 @@ void SceneMain::MoveUpdate()
 
 SceneBase* SceneMain::Update()
 {
+	if (m_suspend > 0)
+	{
+		m_suspend--;
+	}
+
 	if (m_minotimer <= 0)
 	{
 		field[kCoordinateX][kCoordinateY] = input;		//置かれたらfieldに代入する
 		m_placed = false;								//フラグをもとに戻す
 		m_minotimer = kMinoTimer;
-		MinoInit();
+		if (m_suspend <= 0)
+		{
+			MinoInit();
+		}
 	}
 
 	for (int j = 1; j < kBlocWindht - 1; j++)
@@ -179,10 +189,12 @@ SceneBase* SceneMain::Update()
 		if(disappear == true)
 		{
 			field[j][height] = empty;
+			m_suspend = kSuspend;
 		}
 	}
 
-	if (disappear == true)
+	//if (disappear == true)
+	if (m_suspend == 1)
 	{
 		for (int i = kBlocHeight - 2; i >= 1; i--)
 		{
@@ -236,4 +248,5 @@ void SceneMain::Draw()
 
 	//DrawFormatString(600, 0, GetColor(255, 255, 255), "%d", kCount);
 	//DrawFormatString(650, 0, GetColor(255, 255, 255), "%d", kTotal);
+	DrawFormatString(650, 0, GetColor(255, 255, 255), "%d", m_suspend);
 }

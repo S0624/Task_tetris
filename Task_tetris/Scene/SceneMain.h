@@ -38,5 +38,6 @@ private:
 	int m_gravity;		//ミノの重力落下
 	float m_speed;		//押された時のミノのスピード	
 	bool m_placed;		//ミノが置かれたかどうか
+	int m_suspend;		//消されてからミノが落ちるまでのタイマー
 };
 
