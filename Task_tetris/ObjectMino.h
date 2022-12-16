@@ -1,7 +1,8 @@
 #pragma once
-#include "SceneBase.h"
+//#include "SceneBase.h"
 #include"UI/Vec2.h"
-class SceneMain : public SceneBase		//継承してクラスを作成
+
+class ObjectMino
 {
 public:
 	typedef enum state {
@@ -11,24 +12,24 @@ public:
 	};
 
 public:
-	SceneMain();
-	virtual ~SceneMain() {}
+	ObjectMino();
+	virtual ~ObjectMino() {}
 
 	//初期化
-	virtual void Init()override;
+	virtual void Init();
 	//終了処理
-	virtual void End()override {}
+	virtual void End() {}
 
 	//ミノの初期化処理
-	//virtual void MinoInit();
+	virtual void MinoInit();
 	//ミノの移動処理
-	//virtual void MoveUpdate();
+	virtual void MoveUpdate();
 	//ミノが置かれたかどうか
 	virtual bool Placed() { return m_placed; }
 	//更新処理
-	virtual SceneBase* Update()override;
+	virtual void Update();
 	//描画処理
-	virtual void Draw() override;
+	virtual void Draw();
 
 private:
 	int m_frametimer;	//フレームタイマー

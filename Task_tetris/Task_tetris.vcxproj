@@ -141,6 +141,7 @@
   <ItemGroup>
     <ClCompile Include="InputState.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="ObjectMino.cpp" />
     <ClCompile Include="UI\Pad.cpp" />
     <ClCompile Include="Scene\SceneBase.cpp" />
     <ClCompile Include="Scene\SceneMain.cpp" />
@@ -151,6 +152,7 @@
   <ItemGroup>
     <ClInclude Include="game.h" />
     <ClInclude Include="InputState.h" />
+    <ClInclude Include="ObjectMino.h" />
     <ClInclude Include="UI\Pad.h" />
     <ClInclude Include="Scene\SceneBase.h" />
     <ClInclude Include="Scene\SceneMain.h" />
