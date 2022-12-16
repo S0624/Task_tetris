@@ -20,9 +20,9 @@ public:
 	virtual void End()override {}
 
 	//ミノの初期化処理
-	//virtual void MinoInit();
+	virtual void MinoInit();
 	//ミノの移動処理
-	//virtual void MoveUpdate();
+	virtual void MoveUpdate();
 	//ミノが置かれたかどうか
 	virtual bool Placed() { return m_placed; }
 	//更新処理

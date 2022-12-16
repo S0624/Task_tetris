@@ -31,6 +31,7 @@ public:
 	//描画処理
 	virtual void Draw();
 
+	//void setPos(int pos);
 private:
 	int m_frametimer;	//フレームタイマー
 	int m_minotimer;	//ミノのタイマー
@@ -41,4 +42,3 @@ private:
 	bool m_placed;		//ミノが置かれたかどうか
 	int m_suspend;		//消されてからミノが落ちるまでのタイマー
 };
-

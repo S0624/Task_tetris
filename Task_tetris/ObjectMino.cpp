@@ -164,7 +164,7 @@ void ObjectMino::Update()
 	{
 		if (field[j][0] != empty)
 		{
-			kIsEnd = true;								//ゲームオーバー
+			//kIsEnd = true;								//ゲームオーバー
 		}
 	}
 	if (kIsEnd == false)
@@ -209,25 +209,25 @@ void ObjectMino::Update()
 }
 void ObjectMino::Draw()
 {
-	for (int i = 0; i < kBlocHeight; i++)
-	{
-		for (int j = 0; j < kBlocWindht; j++)
-		{
-			switch (field[j][i])
-			{
-			case empty:
-				DrawString(kFieldDisplace + j + (j * 25), 25 + i + (i * 25), "　", GetColor(255, 255, 255));
-			default:
-				break;
-			case input:
-				DrawString(kFieldDisplace + j + (j * 25), 25 + i + (i * 25), "■", GetColor(255, 255, 255));
-				break;
-			case frame:
-				DrawString(kFieldDisplace + j + (j * 25), 25 + i + (i * 25), "□", GetColor(255, 255, 255));
-				break;
-			}
-		}
-	}
+	//for (int i = 0; i < kBlocHeight; i++)
+	//{
+	//	for (int j = 0; j < kBlocWindht; j++)
+	//	{
+	//		switch (field[j][i])
+	//		{
+	//		case empty:
+	//			DrawString(kFieldDisplace + j + (j * 25), 25 + i + (i * 25), "　", GetColor(255, 255, 255));
+	//		default:
+	//			break;
+	//		case input:
+	//			DrawString(kFieldDisplace + j + (j * 25), 25 + i + (i * 25), "■", GetColor(255, 255, 255));
+	//			break;
+	//		case frame:
+	//			DrawString(kFieldDisplace + j + (j * 25), 25 + i + (i * 25), "□", GetColor(255, 255, 255));
+	//			break;
+	//		}
+	//	}
+	//}
 
 	DrawString(m_pos.x, m_pos.y, "■", GetColor(255, 0, 0));
 
@@ -249,4 +249,11 @@ void ObjectMino::Draw()
 	//DrawFormatString(600, 0, GetColor(255, 255, 255), "%d", kCount);
 	//DrawFormatString(650, 0, GetColor(255, 255, 255), "%d", kTotal);
 	DrawFormatString(650, 0, GetColor(255, 255, 255), "%d", m_suspend);
+	DrawFormatString(650, 20, GetColor(255, 255, 255), "%f", m_pos.x);
+	DrawFormatString(650, 75, GetColor(255, 255, 255), "%f", m_pos.y);
 }
+
+//void ObjectMino::setPos(int pos)
+//{
+//	m_pos.x = pos;//620;
+//}
