@@ -40,4 +40,3 @@ private:
 	bool m_placed;		//ミノが置かれたかどうか
 	int m_suspend;		//消されてからミノが落ちるまでのタイマー
 };
-

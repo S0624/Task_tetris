@@ -1,5 +1,6 @@
 #include"DxLib.h"
 #include "ObjectMino.h"
+#include"Scene/SceneMain.h"
 #include"UI/Pad.h"
 #include"game.h"
 
@@ -22,8 +23,12 @@ namespace
 	int kCoordinateY = 0;						//現在地から座標を取得する
 
 	bool kIsEnd = false;						//ゲームの終了フラグ
-	int kSuspend = 30;							//ミノが消されて上のミノが落ちてくるまでの時間
+	constexpr int kSuspend = 30;				//ミノが消されて上のミノが落ちてくるまでの時間
+	constexpr int kGeneration = 5;				//次のミノの生成インタ-バル
 
+	float kPosX;
+	float kPosY;
+	bool kFlag = false;
 }
 
 ObjectMino::ObjectMino() :
@@ -34,7 +39,8 @@ ObjectMino::ObjectMino() :
 	m_speed(),									//ミノの落下スピード
 	m_placed(false),							//置かれたかどうか
 	m_minotimer(),								//ミノが下まで行って置かれるまでのインターバル
-	m_suspend()									//ミノが消されてから落下するまでのタイマー
+	m_suspend(),								//ミノが消されてから落下するまでのタイマー
+	m_generation()								//次のミノの生成インターバル
 {
 	MinoInit();
 }
@@ -43,7 +49,7 @@ void ObjectMino::Init()
 {
 	m_frametimer = kFrameTimer;					//タイマーを設定
 	m_minotimer = kMinoTimer;
-
+	m_generation = kGeneration;
 	for (int i = 0; i < kBlocHeight; i++)		//fieldの初期化
 	{
 		for (int j = 0; j < kBlocWindht; j++)
@@ -73,6 +79,9 @@ void ObjectMino::MinoInit()
 	m_gravity = m_size.y / 2;								//重力
 	m_speed = 2.5f;								//スピード
 	m_placed = false;
+
+	/*m_pos.x += kPosX;
+	m_pos.y += kPosY;*/
 }
 
 void ObjectMino::MoveUpdate()
@@ -144,29 +153,42 @@ void ObjectMino::MoveUpdate()
 
 void ObjectMino::Update()
 {
-	if (m_suspend > 0)
-	{
-		m_suspend--;
-	}
 
 	if (m_minotimer <= 0)
 	{
 		field[kCoordinateX][kCoordinateY] = input;		//置かれたらfieldに代入する
+		kFlag = true;
 		m_placed = false;								//フラグをもとに戻す
-		m_minotimer = kMinoTimer;
-		if (m_suspend <= 0)
+
+		if (m_generation > 0)
 		{
-			MinoInit();
+			m_generation--;
+		}
+
+		if (m_generation <= 0)
+		{
+			kFlag = false;
+			if (m_suspend > 0)
+			{
+				m_suspend--;
+			}
+			if (m_suspend <= 0)
+			{
+
+				MinoInit();
+				m_minotimer = kMinoTimer;
+				m_generation = kGeneration;
+			}
 		}
 	}
 
-	for (int j = 1; j < kBlocWindht - 1; j++)
-	{
-		if (field[j][0] != empty)
-		{
-			//kIsEnd = true;								//ゲームオーバー
-		}
-	}
+	//for (int j = 1; j < kBlocWindht - 1; j++)
+	//{
+	//	if (field[j][0] != empty)
+	//	{
+	//		kIsEnd = true;								//ゲームオーバー
+	//	}
+	//}
 	if (kIsEnd == false)
 	{
 		MoveUpdate();									//ミノの移動処理
@@ -209,25 +231,25 @@ void ObjectMino::Update()
 }
 void ObjectMino::Draw()
 {
-	//for (int i = 0; i < kBlocHeight; i++)
-	//{
-	//	for (int j = 0; j < kBlocWindht; j++)
-	//	{
-	//		switch (field[j][i])
-	//		{
-	//		case empty:
-	//			DrawString(kFieldDisplace + j + (j * 25), 25 + i + (i * 25), "　", GetColor(255, 255, 255));
-	//		default:
-	//			break;
-	//		case input:
-	//			DrawString(kFieldDisplace + j + (j * 25), 25 + i + (i * 25), "■", GetColor(255, 255, 255));
-	//			break;
-	//		case frame:
-	//			DrawString(kFieldDisplace + j + (j * 25), 25 + i + (i * 25), "□", GetColor(255, 255, 255));
-	//			break;
-	//		}
-	//	}
-	//}
+	for (int i = 0; i < kBlocHeight; i++)
+	{
+		for (int j = 0; j < kBlocWindht; j++)
+		{
+			switch (field[j][i])
+			{
+			case empty:
+				DrawString(kFieldDisplace + j + (j * 25), 25 + i + (i * 25), "　", GetColor(255, 255, 255));
+			default:
+				break;
+			case input:
+				DrawString(kFieldDisplace + j + (j * 25), 25 + i + (i * 25), "a", GetColor(255, 0, 0));
+				break;
+			case frame:
+				DrawString(kFieldDisplace + j + (j * 25), 25 + i + (i * 25), "□", GetColor(255, 255, 255));
+				break;
+			}
+		}
+	}
 
 	DrawString(m_pos.x, m_pos.y, "■", GetColor(255, 0, 0));
 
@@ -249,11 +271,34 @@ void ObjectMino::Draw()
 	//DrawFormatString(600, 0, GetColor(255, 255, 255), "%d", kCount);
 	//DrawFormatString(650, 0, GetColor(255, 255, 255), "%d", kTotal);
 	DrawFormatString(650, 0, GetColor(255, 255, 255), "%d", m_suspend);
-	DrawFormatString(650, 20, GetColor(255, 255, 255), "%f", m_pos.x);
-	DrawFormatString(650, 75, GetColor(255, 255, 255), "%f", m_pos.y);
+	DrawFormatString(650, 50, GetColor(255, 255, 255), "X:%f", kPosX);
+	DrawFormatString(650, 100, GetColor(255, 255, 255), "Y:%f", kPosY);
 }
 
-//void ObjectMino::setPos(int pos)
+int ObjectMino::PosX()
+{
+	int posx = 0;
+	posx = kCoordinateX;
+	return posx;
+}
+
+int ObjectMino::PosY()
+{
+	int posy = 0;
+	posy = kCoordinateY;
+	return posy;
+}
+
+bool ObjectMino::flag()
+{
+	bool flag;
+	flag = kFlag;
+
+	return flag;
+}
+
+//void ObjectMino::MinoPos(float posX, float posY)
 //{
-//	m_pos.x = pos;//620;
+//	kPosX = posX;
+//	kPosY = posY;
 //}
