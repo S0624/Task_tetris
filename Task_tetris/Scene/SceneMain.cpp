@@ -63,6 +63,12 @@ void SceneMain::Init()
 	{
 		field[j][21] = frame;
 	}
+
+//デバック用
+	for (int j = 1; j < kBlocWindht - 2; j++)
+	{
+		field[j][20] = input;
+	}
 }
 
 
