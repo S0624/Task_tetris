@@ -17,7 +17,7 @@ namespace
 	constexpr int kFrameTimer = 50;				//ミノが落下するインターバル
 	constexpr int kMinoTimer = 5;				//ミノが設置されるまでの時間
 
-	int field[kBlocWindht][kBlocHeight];		//fieldの設置
+	int kField[kBlocWindht][kBlocHeight];		//fieldの設置
 
 	int kCoordinateX = 0;						//現在地から座標を取得する
 	int kCoordinateY = 0;						//現在地から座標を取得する
@@ -50,23 +50,6 @@ void ObjectMino::Init()
 	m_frametimer = kFrameTimer;					//タイマーを設定
 	m_minotimer = kMinoTimer;
 	m_generation = kGeneration;
-	for (int i = 0; i < kBlocHeight; i++)		//fieldの初期化
-	{
-		for (int j = 0; j < kBlocWindht; j++)
-		{
-			field[j][i] = empty;
-		}
-	}
-
-	for (int i = 0; i < kBlocHeight; i++)		//フレームの表示
-	{
-		field[0][i] = frame;
-		field[11][i] = frame;
-	}
-	for (int j = 0; j < kBlocWindht; j++)
-	{
-		field[j][21] = frame;
-	}
 }
 
 
@@ -80,8 +63,6 @@ void ObjectMino::MinoInit()
 	m_speed = 2.5f;								//スピード
 	m_placed = false;
 
-	/*m_pos.x += kPosX;
-	m_pos.y += kPosY;*/
 }
 
 void ObjectMino::MoveUpdate()
@@ -100,20 +81,20 @@ void ObjectMino::MoveUpdate()
 
 	if (Pad::isTrigger(PAD_INPUT_LEFT))				//左の移動処理、移動制限
 	{
-		if (field[kCoordinateX - 1][kCoordinateY] == empty)
+		if (kField[kCoordinateX - 1][kCoordinateY] == empty)
 		{
 			m_pos.x -= m_size.x;						//キーが押されたら押された方向に動く
 		}
 	}
 	if (Pad::isTrigger(PAD_INPUT_RIGHT))			//右の移動処理、移動制限
 	{
-		if (field[kCoordinateX + 1][kCoordinateY] == empty)
+		if (kField[kCoordinateX + 1][kCoordinateY] == empty)
 		{
 			m_pos.x += m_size.x;
 		}
 	}
 
-	if (field[kCoordinateX][kCoordinateY + 1] != empty)								//field下から出ないように設定
+	if (kField[kCoordinateX][kCoordinateY + 1] != empty)								//field下から出ないように設定
 	{
 		m_placed = true;
 		return;
@@ -123,7 +104,7 @@ void ObjectMino::MoveUpdate()
 	{
 		for (int i = 0; i <= kBlocHeight; i++)
 		{
-			if (field[kCoordinateX][i] != empty)
+			if (kField[kCoordinateX][i] != empty)
 			{
 				m_pos.y = i + (i * 25);				//置ける場所のチェック
 				break;
@@ -133,7 +114,7 @@ void ObjectMino::MoveUpdate()
 
 	if (Pad::isPress(PAD_INPUT_DOWN))				//下の移動処理
 	{
-		if (field[kCoordinateX][kCoordinateY] == empty)
+		if (kField[kCoordinateX][kCoordinateY] == empty)
 		{
 			m_pos.y += m_speed;							//キーが押されたら押された方向に動く
 		}
@@ -156,7 +137,6 @@ void ObjectMino::Update()
 
 	if (m_minotimer <= 0)
 	{
-		field[kCoordinateX][kCoordinateY] = input;		//置かれたらfieldに代入する
 		kFlag = true;
 		m_placed = false;								//フラグをもとに戻す
 
@@ -174,7 +154,6 @@ void ObjectMino::Update()
 			}
 			if (m_suspend <= 0)
 			{
-
 				MinoInit();
 				m_minotimer = kMinoTimer;
 				m_generation = kGeneration;
@@ -198,9 +177,9 @@ void ObjectMino::Update()
 	int height = 0;
 	for (int i = 1; i < kBlocHeight - 1; i++)
 	{
-		if (field[1][i] == input && field[2][i] == input && field[3][i] == input
-			&& field[4][i] == input && field[5][i] == input && field[6][i] == input
-			&& field[7][i] == input && field[8][i] == input && field[9][i] == input && field[10][i] == input)
+		if (kField[1][i] == input && kField[2][i] == input && kField[3][i] == input
+			&& kField[4][i] == input && kField[5][i] == input && kField[6][i] == input
+			&& kField[7][i] == input && kField[8][i] == input && kField[9][i] == input && kField[10][i] == input)
 		{
 			disappear = true;
 			height = i;
@@ -210,19 +189,18 @@ void ObjectMino::Update()
 	{
 		if (disappear == true)
 		{
-			field[j][height] = empty;
+			kField[j][height] = empty;
 			m_suspend = kSuspend;
 		}
 	}
 
-	//if (disappear == true)
 	if (m_suspend == 1)
 	{
 		for (int i = kBlocHeight - 2; i >= 1; i--)
 		{
 			for (int j = 1; j < kBlocWindht - 1; j++)
 			{
-				field[j][i] = field[j][i - 1];
+				kField[j][i] = kField[j][i - 1];
 			}
 		}
 	}
@@ -235,7 +213,7 @@ void ObjectMino::Draw()
 	{
 		for (int j = 0; j < kBlocWindht; j++)
 		{
-			switch (field[j][i])
+			switch (kField[j][i])
 			{
 			case empty:
 				DrawString(kFieldDisplace + j + (j * 25), 25 + i + (i * 25), "　", GetColor(255, 255, 255));
@@ -273,8 +251,23 @@ void ObjectMino::Draw()
 	DrawFormatString(650, 0, GetColor(255, 255, 255), "%d", m_suspend);
 	DrawFormatString(650, 50, GetColor(255, 255, 255), "X:%f", kPosX);
 	DrawFormatString(650, 100, GetColor(255, 255, 255), "Y:%f", kPosY);
+	DrawFormatString(650, 150, GetColor(0, 20, 255), "0:%d", kField[1][20]);
 }
 
+int ObjectMino::Field(int field[12][22])
+{
+	//m_field[1][20] = field[1][20];
+	for (int i = 0; i < kBlocHeight; i++)		//fieldの初期化
+	{
+		for (int j = 0; j < kBlocWindht; j++)
+		{
+			kField[j][i] = field[j][i];;
+		}
+	}
+	return 0;
+}
+
+//あとで名前変えるのとコメント付け
 int ObjectMino::PosX()
 {
 	int posx = 0;

@@ -31,6 +31,8 @@ public:
 	//描画処理
 	virtual void Draw();
 
+	int Field(int field[12][22]);
+
 	int PosX();
 	int PosY();
 	bool flag();
@@ -46,5 +48,6 @@ private:
 	bool m_placed;		//ミノが置かれたかどうか
 	int m_suspend;		//消されてからミノが落ちるまでのタイマー
 	int m_generation;
+	int m_field[12][22];
 };
 

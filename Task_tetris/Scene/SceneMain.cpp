@@ -20,7 +20,7 @@ namespace
 
 	constexpr int kBlocHeight = 22;				//fieldの高さ
 	constexpr int kBlocWindht = 12;				//fieldの横幅
-	int field[kBlocWindht][kBlocHeight];		//fieldの設置
+	int kField[kBlocWindht][kBlocHeight];		//fieldの設置
 
 	int kCoordinateX = 0;						//現在地から座標を取得する
 	int kCoordinateY = 0;						//現在地から座標を取得する
@@ -64,18 +64,18 @@ void SceneMain::Init()
 	{
 		for (int j = 0; j < kBlocWindht; j++)
 		{
-			field[j][i] = empty;
+			kField[j][i] = empty;
 		}
 	}
 
 	for (int i = 0; i < kBlocHeight; i++)		//フレームの表示
 	{
-		field[0][i] = frame;
-		field[11][i] = frame;
+		kField[0][i] = frame;
+		kField[11][i] = frame;
 	}
 	for (int j = 0; j < kBlocWindht; j++)
 	{
-		field[j][21] = frame;
+		kField[j][21] = frame;
 	}
 }
 
@@ -171,7 +171,7 @@ SceneBase* SceneMain::Update()
 
 	if (mino.flag() == true)
 	{
-		field[mino.PosX()][mino.PosY()] = input;		//置かれたらfieldに代入する
+		kField[mino.PosX()][mino.PosY()] = input;		//置かれたらfieldに代入する
 	}
 
 	if (m_suspend > 0)
@@ -212,9 +212,9 @@ SceneBase* SceneMain::Update()
 	int height = 0;
 	for (int i = 1; i < kBlocHeight - 1; i++)
 	{
-		if (field[1][i] == input && field[2][i] == input && field[3][i] == input
-			&& field[4][i] == input && field[5][i] == input && field[6][i] == input
-			&& field[7][i] == input && field[8][i] == input && field[9][i] == input && field[10][i] == input)
+		if (kField[1][i] == input && kField[2][i] == input && kField[3][i] == input
+			&& kField[4][i] == input && kField[5][i] == input && kField[6][i] == input
+			&& kField[7][i] == input && kField[8][i] == input && kField[9][i] == input && kField[10][i] == input)
 		{
 			disappear = true;
 			height = i;
@@ -224,7 +224,7 @@ SceneBase* SceneMain::Update()
 	{
 		if (disappear == true)
 		{
-			field[j][height] = empty;
+			kField[j][height] = empty;
 			m_suspend = kSuspend;
 		}
 	}
@@ -236,10 +236,12 @@ SceneBase* SceneMain::Update()
 		{
 			for (int j = 1; j < kBlocWindht - 1; j++)
 			{
-				field[j][i] = field[j][i - 1];
+				kField[j][i] = kField[j][i - 1];
 			}
 		}
 	}
+
+	mino.Field(kField);		//fieldの設置;
 
 	return this;
 }
@@ -249,7 +251,7 @@ void SceneMain::Draw()
 	{
 		for (int j = 0; j < kBlocWindht; j++)
 		{
-			switch (field[j][i])
+			switch (kField[j][i])
 			{
 			case empty:
 				DrawString(kFieldDisplace + j + (j * 25), 25 + i + (i * 25), "　", GetColor(255, 255, 255));
