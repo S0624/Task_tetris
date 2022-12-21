@@ -229,6 +229,11 @@ SceneBase* SceneMain::Update()
 		}
 	}
 
+	if (m_suspend <= 0)
+	{
+		MinoInit();
+	}
+
 	if (m_suspend == 1)
 		//if (disappear == true)
 	{
