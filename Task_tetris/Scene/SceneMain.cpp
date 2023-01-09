@@ -49,6 +49,8 @@ SceneMain::SceneMain() :
 	int posY = 0;
 	for (auto& mino : Mino)
 	{
+
+		//////普通に動いていたのに1.10の夜から動かなくなった、とりあえず消去で動いてはいるけど解決する
 		//mino.MinoPos(posX,posY);
 		//mino.Init();
 		//mino.MinoInit();
@@ -182,7 +184,7 @@ SceneBase* SceneMain::Update()
 		mino.Update();
 		//}
 
-		if (mino.flag() == true)
+		if (mino.Flag() == true)
 		{
 			kField[mino.PosX()][mino.PosY()] = input;		//置かれたらfieldに代入する
 			//m_suspend = kSuspend;
@@ -268,6 +270,15 @@ SceneBase* SceneMain::Update()
 			}
 		}
 
+		if (mino.EndFlag() == true)
+		{
+			if (Pad::isTrigger(PAD_INPUT_1))		//ボタンが押されたらフェードを開始する
+			{
+				DxLib_End();				//終了する
+				//フェード処理
+				//return(new SceneMain);								//フェード処理が終わったらシーンを切り替える
+			}
+		}
 		mino.Field(kField);		//fieldの設置;
 	}
 	return this;
@@ -297,8 +308,11 @@ void SceneMain::Draw()
 	for (auto& mino : Mino)
 	{
 		mino.Draw();
+		if (mino.EndFlag() == true)
+		{
+			DrawString(200, 400, "Zキーを押してください", GetColor(255, 0, 0));
+		}
 	}
-
 
 	///////////////////////////////////////
 	///        確認用の数値表示         ///

@@ -35,7 +35,8 @@ public:
 
 	int PosX();
 	int PosY();
-	bool flag();
+	bool Flag();
+	bool EndFlag();
 
 
 	virtual void MinoPos(int posX, int posY);

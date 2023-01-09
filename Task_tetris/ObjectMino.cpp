@@ -262,22 +262,22 @@ void ObjectMino::Draw()
 	{
 		DrawString(500, 0, "GamePlay", GetColor(255, 0, 0));
 	}
-	if (m_placed == false)
-	{
-		DrawString(500, 100, "f", GetColor(255, 0, 0));
-	}
-	if (m_placed == true)
-	{
-		DrawString(500, 150, "t", GetColor(255, 0, 0));
-	}
-	DrawFormatString(700, 0, GetColor(0, 255, 255), "%d", a);
+	//if (m_placed == false)
+	//{
+	//	DrawString(500, 100, "f", GetColor(255, 0, 0));
+	//}
+	//if (m_placed == true)
+	//{
+	//	DrawString(500, 150, "t", GetColor(255, 0, 0));
+	//}
+//	DrawFormatString(700, 0, GetColor(0, 255, 255), "%d", a);
 
 	//DrawFormatString(600, 0, GetColor(255, 255, 255), "%d", kCount);
 	//DrawFormatString(650, 0, GetColor(255, 255, 255), "%d", kTotal);
-	DrawFormatString(650, 0, GetColor(255, 255, 255), "%d", m_suspend);
-	DrawFormatString(650, 50, GetColor(255, 255, 255), "X:%f", kPosX);
+	//DrawFormatString(650, 0, GetColor(255, 255, 255), "%d", m_suspend);
+	/*DrawFormatString(650, 50, GetColor(255, 255, 255), "X:%f", kPosX);
 	DrawFormatString(650, 100, GetColor(255, 255, 255), "Y:%f", kPosY);
-	DrawFormatString(650, 150, GetColor(0, 20, 255), "0:%d", kField[1][20]);
+	DrawFormatString(650, 150, GetColor(0, 20, 255), "0:%d", kField[1][20]);*/
 }
 
 int ObjectMino::Field(int field[12][22])
@@ -308,12 +308,20 @@ int ObjectMino::PosY()
 	return posy;
 }
 
-bool ObjectMino::flag()
+bool ObjectMino::Flag()
 {
 	bool flag;
 	flag = kFlag;
 
 	return flag;
+}
+
+bool ObjectMino::EndFlag()
+{
+	bool gameflag;
+	gameflag = kIsEnd;
+
+	return gameflag;
 }
 
 void ObjectMino::MinoPos(int posX,int posY)
