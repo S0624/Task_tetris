@@ -6,8 +6,8 @@
 
 namespace
 {
-	ObjectMino mino;
-	//ObjectMino Mino[2];
+	//ObjectMino mino;
+	ObjectMino Mino[4];
 
 	constexpr int kFieldHeight = 0;				//fieldの大きさ
 	constexpr int kFieldWindth = 0;				//fieldの大きさ
@@ -30,6 +30,8 @@ namespace
 
 	float kPosX = 0;
 	float kPosY = 0;
+
+	int intervalflag = false;
 }
 
 SceneMain::SceneMain() :
@@ -43,10 +45,15 @@ SceneMain::SceneMain() :
 	m_suspend()									//ミノが消されてから落下するまでのタイマー
 {
 	//mino.MinoInit();
-	//for (auto& mino : Mino)
+	int posX = 0;
+	int posY = 0;
+	for (auto& mino : Mino)
 	{
-		mino.Init();
-		mino.MinoInit();
+		//mino.MinoPos(posX,posY);
+		//mino.Init();
+		//mino.MinoInit();
+		posX += 0;
+		posY += 26;
 	}
 	//for (auto& mino : Mino)
 	//{
@@ -76,6 +83,12 @@ void SceneMain::Init()
 	for (int j = 0; j < kBlocWindht; j++)
 	{
 		kField[j][21] = frame;
+	}	
+
+	//デバック用
+	for (int j = 1; j < kBlocWindht - 2; j++)
+	{
+		kField[j][20] = input;
 	}
 }
 
@@ -164,90 +177,99 @@ void SceneMain::MoveUpdate()
 
 SceneBase* SceneMain::Update()
 {
-	//for (auto& mino : Mino) 
+	for (auto& mino : Mino)
 	{
 		mino.Update();
-	}
+		//}
 
-	if (mino.flag() == true)
-	{
-		kField[mino.PosX()][mino.PosY()] = input;		//置かれたらfieldに代入する
-	}
-
-	if (m_suspend > 0)
-	{
-		m_suspend--;
-	}
-
-	//if (m_minotimer <= 0)
-	//{
-	//	field[kCoordinateX][kCoordinateY] = input;		//置かれたらfieldに代入する
-	//	m_placed = false;								//フラグをもとに戻す
-	//	m_minotimer = kMinoTimer;
-	//	for (auto& mino : Mino)
-	//	{
-	//		if (m_suspend <= 0)
-	//		{
-	//			mino.MinoInit();
-	//		}
-	//	}
-	//}
-	//
-	//for (int j = 1; j < kBlocWindht - 1; j++)
-	//{
-	//	if (field[j][0] != empty)
-	//	{
-	//		kIsEnd = true;								//ゲームオーバー
-	//	}
-	//}
-	//if (kIsEnd == false)
-	//{
-	//	for (auto& mino : Mino)
-	//	{
-	//		mino.MoveUpdate();									//ミノの移動処理
-	//	}
-	//}
-	//
-	bool disappear = false;
-	int height = 0;
-	for (int i = 1; i < kBlocHeight - 1; i++)
-	{
-		if (kField[1][i] == input && kField[2][i] == input && kField[3][i] == input
-			&& kField[4][i] == input && kField[5][i] == input && kField[6][i] == input
-			&& kField[7][i] == input && kField[8][i] == input && kField[9][i] == input && kField[10][i] == input)
+		if (mino.flag() == true)
 		{
-			disappear = true;
-			height = i;
+			kField[mino.PosX()][mino.PosY()] = input;		//置かれたらfieldに代入する
+			//m_suspend = kSuspend;
+			//mino.MinoInit();
+			
+			//kField[mino.PosX()][mino.PosY()-1] = input;		//置かれたらfieldに代入する
+			//kField[mino.PosX()][mino.PosY()-2] = input;		//置かれたらfieldに代入する
+			//kField[mino.PosX()+2][mino.PosY()] = input;		//置かれたらfieldに代入する
+
 		}
-	}
-	for (int j = 1; j < kBlocWindht - 1; j++)
-	{
-		if (disappear == true)
+
+
+		if (m_suspend == 0)
 		{
-			kField[j][height] = empty;
-			m_suspend = kSuspend;
+			intervalflag = false;
 		}
-	}
-
-	if (m_suspend <= 0)
-	{
-		MinoInit();
-	}
-
-	if (m_suspend == 1)
-		//if (disappear == true)
-	{
-		for (int i = kBlocHeight - 2; i >= 1; i--)
+		if (m_suspend > 0)
 		{
-			for (int j = 1; j < kBlocWindht - 1; j++)
+			intervalflag = true;
+			m_suspend--;
+		}
+
+		//if (m_minotimer <= 0)
+		//{
+		//	field[kCoordinateX][kCoordinateY] = input;		//置かれたらfieldに代入する
+		//	m_placed = false;								//フラグをもとに戻す
+		//	m_minotimer = kMinoTimer;
+		//	for (auto& mino : Mino)
+		//	{
+		//		if (m_suspend <= 0)
+		//		{
+		//			mino.MinoInit();
+		//		}
+		//	}
+		//}
+		//
+		//for (int j = 1; j < kBlocWindht - 1; j++)
+		//{
+		//	if (field[j][0] != empty)
+		//	{
+		//		kIsEnd = true;								//ゲームオーバー
+		//	}
+		//}
+		//if (kIsEnd == false)
+		//{
+		//	for (auto& mino : Mino)
+		//	{
+		//		mino.MoveUpdate();									//ミノの移動処理
+		//	}
+		//}
+		//
+		bool disappear = false;
+		int height = 0;
+		for (int i = 1; i < kBlocHeight - 1; i++)
+		{
+			if (kField[1][i] == input && kField[2][i] == input && kField[3][i] == input
+				&& kField[4][i] == input && kField[5][i] == input && kField[6][i] == input
+				&& kField[7][i] == input && kField[8][i] == input && kField[9][i] == input && kField[10][i] == input)
 			{
-				kField[j][i] = kField[j][i - 1];
+				disappear = true;
+				height = i;
 			}
 		}
+		for (int j = 1; j < kBlocWindht - 1; j++)
+		{
+			if (disappear == true)
+			{
+				kField[j][height] = empty;
+				m_suspend = kSuspend;
+			}
+		}
+
+
+		if (m_suspend == 1)
+			//if (disappear == true)
+		{
+			for (int i = kBlocHeight - 2; i >= 1; i--)
+			{
+				for (int j = 1; j < kBlocWindht - 1; j++)
+				{
+					kField[j][i] = kField[j][i - 1];
+				}
+			}
+		}
+
+		mino.Field(kField);		//fieldの設置;
 	}
-
-	mino.Field(kField);		//fieldの設置;
-
 	return this;
 }
 void SceneMain::Draw()
@@ -272,7 +294,7 @@ void SceneMain::Draw()
 		}
 	}
 
-	//for (auto& mino : Mino)
+	for (auto& mino : Mino)
 	{
 		mino.Draw();
 	}
@@ -282,17 +304,17 @@ void SceneMain::Draw()
 	///        確認用の数値表示         ///
 	///////////////////////////////////////
 
-	if (kIsEnd == false)
-	{
-		DrawString(500, 0, "GamePlay", GetColor(255, 0, 0));
-	}
-	if (kIsEnd == true)
-	{
-		DrawString(500, 0, "GameOver", GetColor(255, 0, 0));
-	}
+
 
 	//DrawFormatString(600, 0, GetColor(255, 255, 255), "%d", kCount);
 	//DrawFormatString(650, 0, GetColor(255, 255, 255), "%d", kTotal);
-	DrawFormatString(650, 200, GetColor(255, 255, 255), "%d", mino.PosX());
-	DrawFormatString(650, 250, GetColor(255, 255, 255), "%d", mino.PosY());
+	//DrawFormatString(650, 200, GetColor(255, 255, 255), "%d", mino.PosX());
+	//DrawFormatString(650, 250, GetColor(255, 255, 255), "%d", mino.PosY());
+}
+
+bool SceneMain::intervalFlag()
+{
+	bool flag;
+	flag = intervalflag;
+	return flag;
 }

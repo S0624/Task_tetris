@@ -37,7 +37,8 @@ public:
 	int PosY();
 	bool flag();
 
-	//virtual void MinoPos(float posX, float posY);
+
+	virtual void MinoPos(int posX, int posY);
 private:
 	int m_frametimer;	//フレームタイマー
 	int m_minotimer;	//ミノのタイマー
@@ -49,5 +50,8 @@ private:
 	int m_suspend;		//消されてからミノが落ちるまでのタイマー
 	int m_generation;
 	int m_field[12][22];
+
+	int m_posX;
+	int m_posY;
 };
 

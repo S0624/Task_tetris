@@ -29,6 +29,8 @@ public:
 	virtual SceneBase* Update()override;
 	//描画処理
 	virtual void Draw() override;
+	//生成intervalの管理フラグ
+	virtual bool intervalFlag();
 
 private:
 	int m_frametimer;	//フレームタイマー
