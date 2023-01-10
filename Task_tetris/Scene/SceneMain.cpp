@@ -7,7 +7,7 @@
 namespace
 {
 	//ObjectMino mino;
-	ObjectMino Mino[4];
+	ObjectMino Mino[1];
 
 	constexpr int kFieldHeight = 0;				//fieldの大きさ
 	constexpr int kFieldWindth = 0;				//fieldの大きさ
@@ -45,18 +45,17 @@ SceneMain::SceneMain() :
 	m_suspend()									//ミノが消されてから落下するまでのタイマー
 {
 	//mino.MinoInit();
-	int posX = 0;
-	int posY = 0;
-	for (auto& mino : Mino)
-	{
-
-		//////普通に動いていたのに1.10の夜から動かなくなった、とりあえず消去で動いてはいるけど解決する
-		//mino.MinoPos(posX,posY);
-		//mino.Init();
-		//mino.MinoInit();
-		posX += 0;
-		posY += 26;
-	}
+	//int posX = 0;
+	//int posY = 0;
+	//for (auto& mino : Mino)
+	//{
+	//	//////普通に動いていたのに1.10の夜から動かなくなった、とりあえず消去で動いてはいるけど解決する
+	//	mino.MinoPos(posX,posY);
+	//	mino.Init();
+	//	mino.MinoInit();
+	//	posX += 0;
+	//	posY += 26;
+	//}
 	//for (auto& mino : Mino)
 	//{
 	//	mino.MinoInit();
@@ -65,7 +64,11 @@ SceneMain::SceneMain() :
 
 void SceneMain::Init()
 {
-
+	//for (auto& mino : Mino)
+	//{
+	//	mino.Init();
+	//	mino.MinoInit();
+	//}
 	//m_frametimer = kFrameTimer;					//タイマーを設定
 	//m_minotimer = kMinoTimer;
 	//
@@ -91,7 +94,10 @@ void SceneMain::Init()
 	for (int j = 1; j < kBlocWindht - 2; j++)
 	{
 		kField[j][20] = input;
+		kField[j][19] = input;
 	}
+		kField[2][19] = empty;
+
 }
 
 
@@ -179,6 +185,14 @@ void SceneMain::MoveUpdate()
 
 SceneBase* SceneMain::Update()
 {
+	int posX = 0;
+	int posY = 0;
+	for (auto& mino : Mino)
+	{
+		mino.MinoPos(posX, posY);
+		posX += 0;
+		posY += 26;
+	}
 	for (auto& mino : Mino)
 	{
 		mino.Update();

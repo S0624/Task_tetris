@@ -38,8 +38,9 @@ public:
 	bool Flag();
 	bool EndFlag();
 
-
 	virtual void MinoPos(int posX, int posY);
+
+
 private:
 	int m_frametimer;	//フレームタイマー
 	int m_minotimer;	//ミノのタイマー

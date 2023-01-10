@@ -30,7 +30,7 @@ namespace
 	float kPosX;
 	float kPosY;
 	bool kFlag = false;
-	int a;
+	//int a;
 }
 
 ObjectMino::ObjectMino() :
@@ -69,8 +69,6 @@ void ObjectMino::MinoInit()
 
 void ObjectMino::MoveUpdate()
 {
-	a = m_posY / 26;
-
 	kCoordinateY = (m_pos.y - 26) / m_size.y;						//ミノの現在地を座標にする
 	kCoordinateX = (m_pos.x - kFieldDisplace) / m_size.x;			//ミノの現在地を座標にする
 
@@ -158,7 +156,7 @@ void ObjectMino::Update()
 			{
 				kFlag = false;
 				m_placed = false;								//フラグをもとに戻す
-				if (main.intervalFlag() == false)
+				//if (main.intervalFlag() == false)
 				{
 					MinoInit();
 				}
@@ -270,19 +268,17 @@ void ObjectMino::Draw()
 	//{
 	//	DrawString(500, 150, "t", GetColor(255, 0, 0));
 	//}
-//	DrawFormatString(700, 0, GetColor(0, 255, 255), "%d", a);
-
+	//DrawFormatString(700, 0, GetColor(0, 255, 255), "%d", a);
 	//DrawFormatString(600, 0, GetColor(255, 255, 255), "%d", kCount);
 	//DrawFormatString(650, 0, GetColor(255, 255, 255), "%d", kTotal);
 	//DrawFormatString(650, 0, GetColor(255, 255, 255), "%d", m_suspend);
-	/*DrawFormatString(650, 50, GetColor(255, 255, 255), "X:%f", kPosX);
-	DrawFormatString(650, 100, GetColor(255, 255, 255), "Y:%f", kPosY);
-	DrawFormatString(650, 150, GetColor(0, 20, 255), "0:%d", kField[1][20]);*/
+	//DrawFormatString(650, 50, GetColor(255, 255, 255), "X:%f", kPosX);
+	//DrawFormatString(650, 100, GetColor(255, 255, 255), "Y:%f", kPosY);
+	//DrawFormatString(650, 150, GetColor(0, 20, 255), "0:%d", kField[1][20]);
 }
 
 int ObjectMino::Field(int field[12][22])
 {
-	//m_field[1][20] = field[1][20];
 	for (int i = 0; i < kBlocHeight; i++)		//fieldの初期化
 	{
 		for (int j = 0; j < kBlocWindht; j++)
