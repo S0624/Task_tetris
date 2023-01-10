@@ -7,7 +7,8 @@ public:
 	typedef enum state {
 		empty = 0,
 		input = 1,
-		frame = 9
+		frame = 9,
+		move = 2
 	};
 
 public:

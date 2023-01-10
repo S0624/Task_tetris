@@ -32,6 +32,8 @@ namespace
 	float kPosY = 0;
 
 	int intervalflag = false;
+
+	int a = 5;
 }
 
 SceneMain::SceneMain() :
@@ -97,6 +99,7 @@ void SceneMain::Init()
 		kField[j][19] = input;
 	}
 		kField[2][19] = empty;
+		kField[5][0] = move;
 
 }
 
@@ -185,6 +188,18 @@ void SceneMain::MoveUpdate()
 
 SceneBase* SceneMain::Update()
 {
+	int c = 0;
+
+	if (Pad::isTrigger(PAD_INPUT_RIGHT))			//右の移動処理、移動制限
+	{
+		if (kField[kCoordinateX + 1][kCoordinateY] == empty)
+		{
+		}
+		c += 1;
+		kField[5][0] = empty;
+		kField[a + c][0] = move;
+	}
+
 	int posX = 0;
 	int posY = 0;
 	for (auto& mino : Mino)
@@ -203,7 +218,6 @@ SceneBase* SceneMain::Update()
 			kField[mino.PosX()][mino.PosY()] = input;		//置かれたらfieldに代入する
 			//m_suspend = kSuspend;
 			//mino.MinoInit();
-			
 			//kField[mino.PosX()][mino.PosY()-1] = input;		//置かれたらfieldに代入する
 			//kField[mino.PosX()][mino.PosY()-2] = input;		//置かれたらfieldに代入する
 			//kField[mino.PosX()+2][mino.PosY()] = input;		//置かれたらfieldに代入する
@@ -315,6 +329,10 @@ void SceneMain::Draw()
 			case frame:
 				DrawString(kFieldDisplace + j + (j * 25), 25 + i + (i * 25), "□", GetColor(255, 255, 255));
 				break;
+			//}
+			case move:
+				DrawString(kFieldDisplace + j + (j * 25), 25 + i + (i * 25), "■", GetColor(255, 0, 0));
+				break;
 			}
 		}
 	}
@@ -331,8 +349,6 @@ void SceneMain::Draw()
 	///////////////////////////////////////
 	///        確認用の数値表示         ///
 	///////////////////////////////////////
-
-
 
 	//DrawFormatString(600, 0, GetColor(255, 255, 255), "%d", kCount);
 	//DrawFormatString(650, 0, GetColor(255, 255, 255), "%d", kTotal);
