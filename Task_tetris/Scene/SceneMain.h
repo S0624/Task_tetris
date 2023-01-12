@@ -33,6 +33,8 @@ public:
 	//生成intervalの管理フラグ
 	virtual bool intervalFlag();
 
+	int MinoBlock(int mino[4][4]);
+
 private:
 	int m_frametimer;	//フレームタイマー
 	int m_minotimer;	//ミノのタイマー

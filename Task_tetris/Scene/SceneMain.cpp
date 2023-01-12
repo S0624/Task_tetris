@@ -7,6 +7,7 @@
 namespace
 {
 	//ObjectMino mino;
+	//ObjectMino Mino[1];
 	ObjectMino Mino[1];
 
 	constexpr int kFieldHeight = 0;				//fieldの大きさ
@@ -32,8 +33,22 @@ namespace
 	float kPosY = 0;
 
 	int intervalflag = false;
+	//
+	int height = 0;
+	int lencount = 0;
 
-	int a = 5;
+	int blocks[4][4] = {
+	{0,0,0,0},
+	{0,0,0,0},
+	{0,0,0,0},
+	{0,0,0,0}
+	};
+	int kMino[4][4] = {
+	{0,0,0,0},
+	{0,0,0,0},
+	{0,0,0,0},
+	{0,0,0,0}
+	};
 }
 
 SceneMain::SceneMain() :
@@ -98,8 +113,7 @@ void SceneMain::Init()
 		kField[j][20] = input;
 		kField[j][19] = input;
 	}
-		kField[2][19] = empty;
-		kField[5][0] = move;
+	kField[2][19] = empty;
 
 }
 
@@ -188,18 +202,24 @@ void SceneMain::MoveUpdate()
 
 SceneBase* SceneMain::Update()
 {
-	int c = 0;
-
-	if (Pad::isTrigger(PAD_INPUT_RIGHT))			//右の移動処理、移動制限
+	for (int i = 0; i < 4; i++)		//fieldの初期化
 	{
-		if (kField[kCoordinateX + 1][kCoordinateY] == empty)
+		for (int j = 0; j < 4; j++)
 		{
+			blocks[i][j] = kMino[i][j];
 		}
-		c += 1;
-		kField[5][0] = empty;
-		kField[a + c][0] = move;
 	}
 
+	for (int i = 0; i < kBlocHeight; i++)		//fieldの初期化
+	{
+		for (int j = 0; j < kBlocWindht; j++)
+		{
+			if (kField[j][i] == move)
+			{
+					kField[j][i] = input;		//置かれたらfieldに代入する
+			}
+		}
+	}
 	int posX = 0;
 	int posY = 0;
 	for (auto& mino : Mino)
@@ -215,7 +235,19 @@ SceneBase* SceneMain::Update()
 
 		if (mino.Flag() == true)
 		{
-			kField[mino.PosX()][mino.PosY()] = input;		//置かれたらfieldに代入する
+			//kField[mino.PosX()][mino.PosY()] = input;		//置かれたらfieldに代入する
+			
+			for (int i = 0; i < 4; i++)		//fieldの初期化
+			{
+				for (int j = 0; j < 4; j++)
+				{
+					if (blocks[i][j] != empty)
+					{
+						kField[mino.PosX()][mino.PosY()- 3 + i] = blocks[i][j];		//置かれたらfieldに代入する
+					}
+				}
+			}
+
 			//m_suspend = kSuspend;
 			//mino.MinoInit();
 			//kField[mino.PosX()][mino.PosY()-1] = input;		//置かれたらfieldに代入する
@@ -228,6 +260,8 @@ SceneBase* SceneMain::Update()
 		if (m_suspend == 0)
 		{
 			intervalflag = false;
+			height = 0;
+			lencount = 0;
 		}
 		if (m_suspend > 0)
 		{
@@ -265,7 +299,7 @@ SceneBase* SceneMain::Update()
 		//}
 		//
 		bool disappear = false;
-		int height = 0;
+
 		for (int i = 1; i < kBlocHeight - 1; i++)
 		{
 			if (kField[1][i] == input && kField[2][i] == input && kField[3][i] == input
@@ -274,6 +308,7 @@ SceneBase* SceneMain::Update()
 			{
 				disappear = true;
 				height = i;
+				lencount += 1;
 			}
 		}
 		for (int j = 1; j < kBlocWindht - 1; j++)
@@ -285,11 +320,10 @@ SceneBase* SceneMain::Update()
 			}
 		}
 
-
 		if (m_suspend == 1)
 			//if (disappear == true)
 		{
-			for (int i = kBlocHeight - 2; i >= 1; i--)
+			for (int i = height; i >= 1; i--)
 			{
 				for (int j = 1; j < kBlocWindht - 1; j++)
 				{
@@ -307,6 +341,7 @@ SceneBase* SceneMain::Update()
 				//return(new SceneMain);								//フェード処理が終わったらシーンを切り替える
 			}
 		}
+		DrawFormatString(650, 250, GetColor(255, 255, 255), "%d", lencount);
 		mino.Field(kField);		//fieldの設置;
 	}
 	return this;
@@ -361,4 +396,16 @@ bool SceneMain::intervalFlag()
 	bool flag;
 	flag = intervalflag;
 	return flag;
+}
+
+int SceneMain::MinoBlock(int mino[4][4])
+{
+	for (int i = 0; i < 4; i++)		//fieldの初期化
+	{
+		for (int j = 0; j < 4; j++)
+		{
+			kMino[i][j] = mino[i][j];;
+		}
+	}
+	return 0;
 }
