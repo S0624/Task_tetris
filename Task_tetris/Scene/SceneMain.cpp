@@ -8,7 +8,7 @@ namespace
 {
 	//ObjectMino mino;
 	//ObjectMino Mino[1];
-	ObjectMino Mino[1];
+	ObjectMino Mino[4];
 
 	constexpr int kFieldHeight = 0;				//fieldの大きさ
 	constexpr int kFieldWindth = 0;				//fieldの大きさ
@@ -43,12 +43,13 @@ namespace
 	{0,0,0,0},
 	{0,0,0,0}
 	};
-	int kMino[4][4] = {
-	{0,0,0,0},
-	{0,0,0,0},
-	{0,0,0,0},
-	{0,0,0,0}
-	};
+
+	//int kMino[4][4] = {
+	//{0,0,0,0},
+	//{0,0,0,0},
+	//{0,0,0,0},
+	//{0,0,0,0}
+	//};
 }
 
 SceneMain::SceneMain() :
@@ -202,13 +203,13 @@ void SceneMain::MoveUpdate()
 
 SceneBase* SceneMain::Update()
 {
-	for (int i = 0; i < 4; i++)		//fieldの初期化
-	{
-		for (int j = 0; j < 4; j++)
-		{
-			blocks[i][j] = kMino[i][j];
-		}
-	}
+	//for (int i = 0; i < 4; i++)		//fieldの初期化
+	//{
+	//	for (int j = 0; j < 4; j++)
+	//	{
+	//		//blocks[i][j] = kMino[i][j];
+	//	}
+	//}
 
 	for (int i = 0; i < kBlocHeight; i++)		//fieldの初期化
 	{
@@ -243,7 +244,9 @@ SceneBase* SceneMain::Update()
 				{
 					if (blocks[i][j] != empty)
 					{
-						kField[mino.PosX()][mino.PosY()- 3 + i] = blocks[i][j];		//置かれたらfieldに代入する
+						//kField[mino.PosX()][mino.PosY()] = blocks[i][j];		//置かれたらfieldに代入する
+						kField[mino.PosX()][mino.PosY()] = blocks[i][j];		//置かれたらfieldに代入する
+						//kField[mino.PosX()][mino.PosY()- 3 + i] = blocks[i][j];		//置かれたらfieldに代入する
 					}
 				}
 			}
@@ -400,11 +403,11 @@ bool SceneMain::intervalFlag()
 
 int SceneMain::MinoBlock(int mino[4][4])
 {
-	for (int i = 0; i < 4; i++)		//fieldの初期化
+	for (int i = 0; i < 4; i++)
 	{
 		for (int j = 0; j < 4; j++)
 		{
-			kMino[i][j] = mino[i][j];;
+			blocks[i][j] = mino[i][j];;
 		}
 	}
 	return 0;

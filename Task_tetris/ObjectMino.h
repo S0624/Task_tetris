@@ -32,11 +32,16 @@ public:
 	//描画処理
 	virtual void Draw();
 
+	//fieldの情報
 	int Field(int field[12][22]);
 
+	//ミノのX座標
 	int PosX();
+	//ミノのY座標
 	int PosY();
+	//置かれたフラグを扱う
 	bool Flag();
+	//ゲームオーバーのフラグ
 	bool EndFlag();
 
 	virtual void MinoPos(int posX, int posY);

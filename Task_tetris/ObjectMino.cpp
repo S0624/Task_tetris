@@ -31,13 +31,62 @@ namespace
 	bool kFlag = false;
 
 	//
-	int Imino[4][4] = {
+	int minoBlock[4][4] = {
+	{0,0,0,0},
+	{0,0,0,0},
+	{0,0,0,0},
+	{0,0,0,0}
+	};
+	
+	int Imino1[4][4] = {
 	{0,0,2,0},
 	{0,0,2,0},
 	{0,0,2,0},
 	{0,0,2,0}
 	};
-	//int a;
+	int Imino2[4][4] = {
+	{0,0,0,0},
+	{2,2,2,2},
+	{0,0,0,0},
+	{0,0,0,0}
+	};
+	
+
+	int Omino[4][4] = {
+	{0,0,0,0},
+	{0,2,2,0},
+	{0,2,2,0},
+	{0,0,0,0}
+	};
+
+	int Tmino1[4][4] = {
+	{0,0,0,0},
+	{0,2,0,0},
+	{2,2,2,0},
+	{0,0,0,0}
+	};
+	int Tmino2[4][4] = {
+	{0,0,0,0},
+	{0,2,0,0},
+	{2,2,0,0},
+	{0,2,0,0}
+	};
+	int Tmino3[4][4] = {
+	{0,0,0,0},
+	{0,0,0,0},
+	{2,2,2,0},
+	{0,2,0,0}
+	};
+	int Tmino4[4][4] = {
+	{0,0,0,0},
+	{0,2,0,0},
+	{0,2,2,0},
+	{0,2,0,0}
+	};
+
+
+	//
+	int padflag = false;
 }
 
 ObjectMino::ObjectMino() :
@@ -59,6 +108,7 @@ void ObjectMino::Init()
 	m_frametimer = kFrameTimer;					//タイマーを設定
 	m_minotimer = kMinoTimer;					//タイマーを設定
 	m_generation = kGeneration;
+	
 }
 
 
@@ -72,6 +122,14 @@ void ObjectMino::MinoInit()
 	m_speed = 2.5f;								//スピード
 	m_placed = false;
 
+
+	for (int i = 0; i < 4; i++)		//fieldの初期化
+	{
+		for (int j = 0; j < 4; j++)
+		{
+			minoBlock[i][j] = Imino1[i][j];;
+		}
+	}
 }
 
 void ObjectMino::MoveUpdate()
@@ -83,9 +141,22 @@ void ObjectMino::MoveUpdate()
 	//{0,0,0,0}
 	//};
 
+
+	if (Pad::isPress(PAD_INPUT_1))				//回転
+	{
+		padflag = true;
+		for (int i = 0; i < 4; i++)		//fieldの初期化
+		{
+			for (int j = 0; j < 4; j++)
+			{
+				minoBlock[i][j] = Imino2[i][j];;
+			}
+		}
+	}
+
 	
 
-	kCoordinateY = (m_pos.y - 26) / m_size.y;						//ミノの現在地を座標にする
+	kCoordinateY = (m_pos.y - 25) / m_size.y;						//ミノの現在地を座標にする
 	kCoordinateX = (m_pos.x - kFieldDisplace) / m_size.x;			//ミノの現在地を座標にする
 
 	if (m_placed == true)								//	ミノの設置処理
@@ -120,18 +191,18 @@ void ObjectMino::MoveUpdate()
 	}
 	if (Pad::isTrigger(PAD_INPUT_UP))				//上の移動処理
 	{
-		for (int i = 0; i <= kBlocHeight; i++)
+		for (int i = kCoordinateY; i < kBlocHeight; i++)
 		{
 			if (kField[kCoordinateX][i] != empty)
 			{
-				m_pos.y = i + (i * 25);				//置ける場所のチェック
+				m_pos.y = (i * 26);				//置ける場所のチェック
 				break;
 			}
 		}
 	}
 	if (Pad::isPress(PAD_INPUT_DOWN))				//下の移動処理
 	{
-		if (kField[kCoordinateX][kCoordinateY] == empty)
+		//if (kField[kCoordinateX][kCoordinateY] == empty)
 		{
 			m_pos.y += m_speed;							//キーが押されたら押された方向に動く
 		}
@@ -154,7 +225,7 @@ void ObjectMino::Update()
 	if (m_minotimer <= 0)
 	{
 		kFlag = true;
-		main.MinoBlock(Imino);
+		main.MinoBlock(minoBlock);
 		if (m_generation > 0)
 		{
 			m_generation--;
@@ -172,7 +243,9 @@ void ObjectMino::Update()
 				m_placed = false;								//フラグをもとに戻す
 				//if (main.intervalFlag() == false)
 				{
-					MinoInit();
+					m_pos.x = 180 + m_posX;								//初期位置
+					m_pos.y = 25 + m_posY;								//初期位置
+					//MinoInit();
 				}
 				m_minotimer = kMinoTimer;
 				m_generation = kGeneration;
@@ -257,9 +330,10 @@ void ObjectMino::Draw()
 	//}
 
 	DrawString(m_pos.x, m_pos.y, "■", GetColor(255, 0, 0));
-	DrawString(m_pos.x, m_pos.y - 26, "■", GetColor(255, 0, 0));
-	DrawString(m_pos.x, m_pos.y - 26 - 26, "■", GetColor(255, 0, 0));
-	DrawString(m_pos.x, m_pos.y - 26 - 26 - 26, "■", GetColor(255, 0, 0));
+	//DrawString(m_pos.x, m_pos.y - 26, "■", GetColor(255, 0, 0));
+	//DrawString(m_pos.x, m_pos.y - 26 - 26, "■", GetColor(255, 0, 0));
+	//DrawString(m_pos.x, m_pos.y - 26 - 26 - 26, "■", GetColor(255, 0, 0));
+	
 	//DrawString(m_pos.x +26, m_pos.y , "■", GetColor(255, 0, 0));
 	//DrawString(m_pos.x +52, m_pos.y , "■", GetColor(255, 0, 0));
 
@@ -276,6 +350,15 @@ void ObjectMino::Draw()
 	else if (kIsEnd == false)
 	{
 		DrawString(500, 0, "GamePlay", GetColor(255, 0, 0));
+	}
+	
+	if (padflag == false)
+	{
+		DrawString(500, 150, "押されていない", GetColor(255, 0, 0));
+	}
+	else if (padflag == true)
+	{
+		DrawString(500, 150, "押された", GetColor(255, 0, 0));
 	}
 	//if (m_placed == false)
 	//{
@@ -306,7 +389,7 @@ int ObjectMino::Field(int field[12][22])
 	return 0;
 }
 
-//あとで名前変えるのとコメント付け
+
 int ObjectMino::PosX()
 {
 	int posx = 0;
