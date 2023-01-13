@@ -221,7 +221,6 @@ void ObjectMino::MoveUpdate()
 
 void ObjectMino::Update()
 {
-
 	if (m_minotimer <= 0)
 	{
 		kFlag = true;
@@ -243,17 +242,22 @@ void ObjectMino::Update()
 				m_placed = false;								//フラグをもとに戻す
 				//if (main.intervalFlag() == false)
 				{
-					m_pos.x = 180 + m_posX;								//初期位置
-					m_pos.y = 25 + m_posY;								//初期位置
-					//MinoInit();
+					//m_pos.x = 180 + m_posX;								//初期位置
+					//m_pos.y = 25 + m_posY;								//初期位置
+					MinoInit();
 				}
 				m_minotimer = kMinoTimer;
 				m_generation = kGeneration;
 			}
 		}
+		//if (main.intervalFlag() == false)
+		//{
+		//	kFlag = false;
+		//	m_placed = false;
+		//}
 		for (int j = 1; j < kBlocWindht - 2; j++)
 		{
-			if (kField[j][0] != empty)
+			if (kField[j][0] == input)
 			{
 				kIsEnd = true;
 			}
@@ -330,6 +334,19 @@ void ObjectMino::Draw()
 	//}
 
 	DrawString(m_pos.x, m_pos.y, "■", GetColor(255, 0, 0));
+
+	for (int i = 0; i < 4; i++)
+	{
+		for (int j = 0; j < 4; j++)
+		{
+			if (minoBlock[i][j] == 2)
+			{
+				//DrawString(kFieldDisplace + j + (j * 25), 25 + i + (i * 25), "■", GetColor(255, 0, 0));
+				DrawString(m_pos.x + j + (j * 25), m_pos.y + i + (i * 25), "■", GetColor(255, 0, 0));
+				DrawFormatString(500, 100 + i * 25, GetColor(255, 255, 255), "%d", i);
+			}
+		}
+	}
 	//DrawString(m_pos.x, m_pos.y - 26, "■", GetColor(255, 0, 0));
 	//DrawString(m_pos.x, m_pos.y - 26 - 26, "■", GetColor(255, 0, 0));
 	//DrawString(m_pos.x, m_pos.y - 26 - 26 - 26, "■", GetColor(255, 0, 0));

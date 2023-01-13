@@ -7,8 +7,8 @@
 namespace
 {
 	//ObjectMino mino;
-	//ObjectMino Mino[1];
-	ObjectMino Mino[4];
+	ObjectMino Mino[1];
+	//ObjectMino Mino[2];
 
 	constexpr int kFieldHeight = 0;				//field‚Ì‘å‚«‚³
 	constexpr int kFieldWindth = 0;				//field‚Ì‘å‚«‚³
@@ -32,7 +32,7 @@ namespace
 	float kPosX = 0;
 	float kPosY = 0;
 
-	int intervalflag = false;
+	bool intervalflag = false;
 	//
 	int height = 0;
 	int lencount = 0;
@@ -218,6 +218,7 @@ SceneBase* SceneMain::Update()
 			if (kField[j][i] == move)
 			{
 					kField[j][i] = input;		//’u‚©‚ê‚½‚çfield‚É‘ã“ü‚·‚é
+					intervalflag = true;
 			}
 		}
 	}
@@ -331,6 +332,7 @@ SceneBase* SceneMain::Update()
 				for (int j = 1; j < kBlocWindht - 1; j++)
 				{
 					kField[j][i] = kField[j][i - 1];
+					//kField[j][i] = kField[j][i - lencount];
 				}
 			}
 		}
