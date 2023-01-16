@@ -58,7 +58,7 @@ namespace
 	{0,2,2,0},
 	{0,0,0,0}
 	};
-
+	
 	int Tmino1[4][4] = {
 	{0,0,0,0},
 	{0,2,0,0},
@@ -127,7 +127,8 @@ void ObjectMino::MinoInit()
 	{
 		for (int j = 0; j < 4; j++)
 		{
-			minoBlock[i][j] = Imino1[i][j];;
+			minoBlock[i][j] = Omino[i][j];;
+			//minoBlock[i][j] = Imino1[i][j];;
 		}
 	}
 }
@@ -142,17 +143,17 @@ void ObjectMino::MoveUpdate()
 	//};
 
 
-	if (Pad::isPress(PAD_INPUT_1))				//回転
-	{
-		padflag = true;
-		for (int i = 0; i < 4; i++)		//fieldの初期化
-		{
-			for (int j = 0; j < 4; j++)
-			{
-				minoBlock[i][j] = Imino2[i][j];;
-			}
-		}
-	}
+	//if (Pad::isPress(PAD_INPUT_1))				//回転
+	//{
+	//	padflag = true;
+	//	for (int i = 0; i < 4; i++)		//fieldの初期化
+	//	{
+	//		for (int j = 0; j < 4; j++)
+	//		{
+	//			minoBlock[i][j] = Imino2[i][j];;
+	//		}
+	//	}
+	//}
 
 	
 
@@ -171,6 +172,19 @@ void ObjectMino::MoveUpdate()
 	{
 		if (Pad::isTrigger(PAD_INPUT_LEFT))				//左の移動処理、移動制限
 		{
+			//for (int i = 0; i < 4; i++)		//fieldの初期化
+			//{
+			//	for (int j = 0; j < 4; j++)
+			//	{
+			//		//minoBlock[i][j] = Imino2[i][j];;
+			//		if (kField[(kCoordinateX + i) - 1][kCoordinateY] != empty)
+			//		{
+			//			break;
+			//		}
+			//			m_pos.x -= m_size.x;						//キーが押されたら押された方向に動く
+			//	}
+			//}
+		
 			if (kField[kCoordinateX - 1][kCoordinateY] == empty)
 			{
 				m_pos.x -= m_size.x;						//キーが押されたら押された方向に動く
@@ -333,7 +347,7 @@ void ObjectMino::Draw()
 	//	}
 	//}
 
-	DrawString(m_pos.x, m_pos.y, "■", GetColor(255, 0, 0));
+	//DrawString(m_pos.x, m_pos.y, "■", GetColor(255, 0, 0));
 
 	for (int i = 0; i < 4; i++)
 	{
@@ -343,10 +357,12 @@ void ObjectMino::Draw()
 			{
 				//DrawString(kFieldDisplace + j + (j * 25), 25 + i + (i * 25), "■", GetColor(255, 0, 0));
 				DrawString(m_pos.x + j + (j * 25), m_pos.y + i + (i * 25), "■", GetColor(255, 0, 0));
-				DrawFormatString(500, 100 + i * 25, GetColor(255, 255, 255), "%d", i);
+				//DrawFormatString(500, 100 + i * 25, GetColor(255, 255, 255), "%f", m_pos.y);
+				//DrawFormatString(500, 100 + i * 25, GetColor(255, 255, 255), "%d", i);
 			}
 		}
 	}
+	
 	//DrawString(m_pos.x, m_pos.y - 26, "■", GetColor(255, 0, 0));
 	//DrawString(m_pos.x, m_pos.y - 26 - 26, "■", GetColor(255, 0, 0));
 	//DrawString(m_pos.x, m_pos.y - 26 - 26 - 26, "■", GetColor(255, 0, 0));

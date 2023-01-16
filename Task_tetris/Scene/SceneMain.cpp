@@ -247,8 +247,8 @@ SceneBase* SceneMain::Update()
 					if (blocks[i][j] != empty)
 					{
 						//kField[mino.PosX()][mino.PosY()] = blocks[i][j];		//置かれたらfieldに代入する
-						kField[mino.PosX()][mino.PosY()] = blocks[i][j];		//置かれたらfieldに代入する
-						//kField[mino.PosX()][mino.PosY()- 3 + i] = blocks[i][j];		//置かれたらfieldに代入する
+						//kField[mino.PosX()][mino.PosY()] = blocks[i][j];		//置かれたらfieldに代入する
+						kField[mino.PosX() + j][mino.PosY() + i] = blocks[i][j];		//置かれたらfieldに代入する
 					}
 				}
 			}
