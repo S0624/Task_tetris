@@ -33,6 +33,7 @@ namespace
 	float kPosY = 0;
 
 	bool intervalflag = false;
+	
 	//
 	int height = 0;
 	int lencount = 0;
