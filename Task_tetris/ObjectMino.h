@@ -27,6 +27,7 @@ public:
 	virtual void MoveUpdate();
 	//ミノが置かれたかどうか
 	virtual bool Placed() { return m_placed; }
+	void MinoAcquisition();
 	//更新処理
 	virtual void Update();
 	//描画処理

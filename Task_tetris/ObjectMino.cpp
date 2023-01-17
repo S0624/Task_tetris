@@ -4,6 +4,8 @@
 #include"UI/Pad.h"
 #include"game.h"
 
+#include<cassert>
+
 namespace
 {
 	SceneMain main;
@@ -29,22 +31,23 @@ namespace
 	float kPosX;
 	float kPosY;
 	bool kFlag = false;
+	constexpr int kMinoblock = 4;
 
 	//
-	int minoBlock[4][4] = {
+	int minoBlock[kMinoblock][kMinoblock] = {
 	{0,0,0,0},
 	{0,0,0,0},
 	{0,0,0,0},
 	{0,0,0,0}
 	};
 	
-	int Imino1[4][4] = {
+	int Imino1[kMinoblock][kMinoblock] = {
 	{0,0,2,0},
 	{0,0,2,0},
 	{0,0,2,0},
 	{0,0,2,0}
 	};
-	int Imino2[4][4] = {
+	int Imino2[kMinoblock][kMinoblock] = {
 	{0,0,0,0},
 	{2,2,2,2},
 	{0,0,0,0},
@@ -52,32 +55,32 @@ namespace
 	};
 	
 
-	int Omino[4][4] = {
+	int Omino[kMinoblock][kMinoblock] = {
 	{0,0,0,0},
 	{0,2,2,0},
 	{0,2,2,0},
 	{0,0,0,0}
 	};
 	
-	int Tmino1[4][4] = {
+	int Tmino1[kMinoblock][kMinoblock] = {
 	{0,0,0,0},
 	{0,2,0,0},
 	{2,2,2,0},
 	{0,0,0,0}
 	};
-	int Tmino2[4][4] = {
+	int Tmino2[kMinoblock][kMinoblock] = {
 	{0,0,0,0},
 	{0,2,0,0},
 	{2,2,0,0},
 	{0,2,0,0}
 	};
-	int Tmino3[4][4] = {
+	int Tmino3[kMinoblock][kMinoblock] = {
 	{0,0,0,0},
 	{0,0,0,0},
 	{2,2,2,0},
 	{0,2,0,0}
 	};
-	int Tmino4[4][4] = {
+	int Tmino4[kMinoblock][kMinoblock] = {
 	{0,0,0,0},
 	{0,2,0,0},
 	{0,2,2,0},
@@ -86,7 +89,12 @@ namespace
 
 
 	//
-	int padflag = false;
+	int kPadflag = false;
+	int kMinoRight = 0;
+	int kMinoLeft = 0;
+	int kMinoUp = 0;
+	int kMinoDown = 0;
+	int kRotation = 0;
 }
 
 ObjectMino::ObjectMino() :
@@ -123,12 +131,12 @@ void ObjectMino::MinoInit()
 	m_placed = false;
 
 
-	for (int i = 0; i < 4; i++)		//fieldの初期化
+	for (int i = 0; i < kMinoblock; i++)		//fieldの初期化
 	{
-		for (int j = 0; j < 4; j++)
+		for (int j = 0; j < kMinoblock; j++)
 		{
-			minoBlock[i][j] = Omino[i][j];;
-			//minoBlock[i][j] = Imino1[i][j];;
+			//minoBlock[j][i] = Omino[i][j];;
+			minoBlock[j][i] = Imino1[i][j];;
 		}
 	}
 }
@@ -143,19 +151,31 @@ void ObjectMino::MoveUpdate()
 	//};
 
 
-	//if (Pad::isPress(PAD_INPUT_1))				//回転
-	//{
-	//	padflag = true;
-	//	for (int i = 0; i < 4; i++)		//fieldの初期化
-	//	{
-	//		for (int j = 0; j < 4; j++)
-	//		{
-	//			minoBlock[i][j] = Imino2[i][j];;
-	//		}
-	//	}
-	//}
-
-	
+	if (Pad::isTrigger(PAD_INPUT_1))				//回転
+	{
+		kRotation += 1;
+		kPadflag = true;
+		for (int i = 0; i < 4; i++)		//fieldの初期化
+		{
+			for (int j = 0; j < 4; j++)
+			{
+				if (kRotation == 0)
+				{
+					minoBlock[j][i] = Imino1[i][j];;
+					//kRotation = 0;
+				}
+				if (kRotation == 1)
+				{
+					minoBlock[j][i] = Imino2[i][j];;
+				}
+				if (kRotation == 2)
+				{
+					//minoBlock[j][i] = Imino1[i][j];;
+					kRotation = 0;
+				}
+			}
+		}
+	}
 
 	kCoordinateY = (m_pos.y - 25) / m_size.y;						//ミノの現在地を座標にする
 	kCoordinateX = (m_pos.x - kFieldDisplace) / m_size.x;			//ミノの現在地を座標にする
@@ -172,47 +192,50 @@ void ObjectMino::MoveUpdate()
 	{
 		if (Pad::isTrigger(PAD_INPUT_LEFT))				//左の移動処理、移動制限
 		{
-			//for (int i = 0; i < 4; i++)		//fieldの初期化
-			//{
-			//	for (int j = 0; j < 4; j++)
-			//	{
-			//		//minoBlock[i][j] = Imino2[i][j];;
-			//		if (kField[(kCoordinateX + i) - 1][kCoordinateY] != empty)
-			//		{
-			//			break;
-			//		}
-			//			m_pos.x -= m_size.x;						//キーが押されたら押された方向に動く
-			//	}
-			//}
-		
-			if (kField[kCoordinateX - 1][kCoordinateY] == empty)
+			if (kField[kCoordinateX + kMinoLeft - 1][kCoordinateY] == empty)
 			{
 				m_pos.x -= m_size.x;						//キーが押されたら押された方向に動く
 			}
 		}
 		if (Pad::isTrigger(PAD_INPUT_RIGHT))			//右の移動処理、移動制限
 		{
-			if (kField[kCoordinateX + 1][kCoordinateY] == empty)
+			if (kField[kCoordinateX + kMinoRight + 1][kCoordinateY] == empty)
 			{
 				m_pos.x += m_size.x;
 			}
 		}
 	}
-	if (kField[kCoordinateX][kCoordinateY + 1] != empty)								//field下から出ないように設定
+	if (kField[kCoordinateX + kMinoRight][kCoordinateY + kMinoDown + 1] != empty ||
+		kField[kCoordinateX + kMinoLeft][kCoordinateY + kMinoDown + 1] != empty)								//field下から出ないように設定
 	{
 		m_placed = true;
 		return;
 	}
 	if (Pad::isTrigger(PAD_INPUT_UP))				//上の移動処理
 	{
+		int checkdown = 0;
 		for (int i = kCoordinateY; i < kBlocHeight; i++)
 		{
-			if (kField[kCoordinateX][i] != empty)
+			if (kField[kCoordinateX + kMinoLeft][i] != empty)
 			{
-				m_pos.y = (i * 26);				//置ける場所のチェック
+				checkdown = i;
 				break;
 			}
+		
 		}
+		for (int i = kCoordinateY; i < kBlocHeight; i++)
+		{
+			if (kField[kCoordinateX + kMinoRight][i] != empty)
+			{
+				if (checkdown > i)
+				{
+					checkdown = i;
+				}
+				break;
+			}
+
+		}
+		m_pos.y = ((checkdown - kMinoDown) * 26);				//置ける場所のチェック
 	}
 	if (Pad::isPress(PAD_INPUT_DOWN))				//下の移動処理
 	{
@@ -233,8 +256,81 @@ void ObjectMino::MoveUpdate()
 	}
 }
 
+void ObjectMino::MinoAcquisition()
+{
+	int left = kMinoblock;					//左をとるための変数
+	int right = 0;							//右をとるための変数
+	int up = kMinoblock;					//上をとるための変数
+	int down = 0;							//下をとるための変数
+
+	//左をとるための処理
+	for (int i = 0; i < kMinoblock; i++)
+	{
+		for (int j = 0; j < kMinoblock; j++)
+		{
+			if (minoBlock[j][i] == 2)
+			{
+				if (left >= j)				//今入っている数字より小さいものが見つかったら代入する
+				{
+					left = j;
+				}
+			}
+		}
+	}
+	//右をとるための処理
+	for (int i = 3; i >= 0; i--)
+	{
+		for (int j = 3; j >= 0; j--)
+		{
+			if (minoBlock[j][i] == 2)
+			{
+				if (right <= j)
+				{
+					right = j;				//今入っている数字より大きいものが見つかったら代入する
+				}
+			}
+		}
+	}
+	//上をとるための処理
+	for (int i = 0; i < kMinoblock; i++)
+	{
+		for (int j = 0; j < kMinoblock; j++)
+		{
+			if (minoBlock[j][i] == 2)
+			{
+				if (up >= i)				//今入っている数字より小さいものが見つかったら代入する
+				{
+					up = i;
+				}
+			}
+		}
+	}
+	//右をとるための処理
+	for (int i = 3; i >= 0; i--)
+	{
+		for (int j = 3; j >= 0; j--)
+		{
+			if (minoBlock[j][i] == 2)
+			{
+				if (down <= i)
+				{
+					down = i;				//今入っている数字より大きいものが見つかったら代入する
+				}
+			}
+		}
+	}
+
+
+	kMinoLeft = left;
+	kMinoRight = right;
+	kMinoUp = up;
+	kMinoDown = down;
+
+}
+
 void ObjectMino::Update()
 {
+	MinoAcquisition();
 	if (m_minotimer <= 0)
 	{
 		kFlag = true;
@@ -259,16 +355,13 @@ void ObjectMino::Update()
 					//m_pos.x = 180 + m_posX;								//初期位置
 					//m_pos.y = 25 + m_posY;								//初期位置
 					MinoInit();
+					kRotation = 0;
 				}
 				m_minotimer = kMinoTimer;
 				m_generation = kGeneration;
 			}
 		}
-		//if (main.intervalFlag() == false)
-		//{
-		//	kFlag = false;
-		//	m_placed = false;
-		//}
+
 		for (int j = 1; j < kBlocWindht - 2; j++)
 		{
 			if (kField[j][0] == input)
@@ -349,14 +442,14 @@ void ObjectMino::Draw()
 
 	//DrawString(m_pos.x, m_pos.y, "■", GetColor(255, 0, 0));
 
-	for (int i = 0; i < 4; i++)
+	for (int i = 0; i < kMinoblock; i++)
 	{
-		for (int j = 0; j < 4; j++)
+		for (int j = 0; j < kMinoblock; j++)
 		{
-			if (minoBlock[i][j] == 2)
+			if (minoBlock[j][i] == 2)
 			{
-				//DrawString(kFieldDisplace + j + (j * 25), 25 + i + (i * 25), "■", GetColor(255, 0, 0));
 				DrawString(m_pos.x + j + (j * 25), m_pos.y + i + (i * 25), "■", GetColor(255, 0, 0));
+				//DrawString(kFieldDisplace + j + (j * 25), 25 + i + (i * 25), "■", GetColor(255, 0, 0));
 				//DrawFormatString(500, 100 + i * 25, GetColor(255, 255, 255), "%f", m_pos.y);
 				//DrawFormatString(500, 100 + i * 25, GetColor(255, 255, 255), "%d", i);
 			}
@@ -385,14 +478,23 @@ void ObjectMino::Draw()
 		DrawString(500, 0, "GamePlay", GetColor(255, 0, 0));
 	}
 	
-	if (padflag == false)
+	if (kPadflag == false)
 	{
 		DrawString(500, 150, "押されていない", GetColor(255, 0, 0));
 	}
-	else if (padflag == true)
+	else if (kPadflag == true)
 	{
 		DrawString(500, 150, "押された", GetColor(255, 0, 0));
 	}
+
+	DrawFormatString(650, 280, GetColor(255, 0, 0), "回転%d", kRotation);
+	DrawFormatString(650, 350, GetColor(255, 0, 0), "R%d", kMinoRight);
+	DrawFormatString(650, 380, GetColor(255, 0, 0), "L%d", kMinoLeft);
+	DrawFormatString(650, 410, GetColor(255, 0, 0), "U%d", kMinoUp);
+	DrawFormatString(650, 440, GetColor(255, 0, 0), "D%d", kMinoDown);
+	DrawFormatString(650, 500, GetColor(255, 0, 0), "Y%d", kCoordinateY + kMinoDown);
+	DrawFormatString(650, 530, GetColor(255, 0, 0), "XL%d", kCoordinateX + kMinoLeft);
+	DrawFormatString(650, 560, GetColor(255, 0, 0), "XR%d", kCoordinateX + kMinoRight);
 	//if (m_placed == false)
 	//{
 	//	DrawString(500, 100, "f", GetColor(255, 0, 0));
@@ -412,6 +514,8 @@ void ObjectMino::Draw()
 
 int ObjectMino::Field(int field[12][22])
 {
+	//assert(false);
+
 	for (int i = 0; i < kBlocHeight; i++)		//fieldの初期化
 	{
 		for (int j = 0; j < kBlocWindht; j++)
