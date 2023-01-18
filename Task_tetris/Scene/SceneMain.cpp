@@ -46,13 +46,6 @@ namespace
 	{0,0,0,0},
 	{0,0,0,0}
 	};
-
-	//int kMino[4][4] = {
-	//{0,0,0,0},
-	//{0,0,0,0},
-	//{0,0,0,0},
-	//{0,0,0,0}
-	//};
 }
 
 SceneMain::SceneMain() :
@@ -322,8 +315,8 @@ SceneBase* SceneMain::Update()
 		{
 			if (disappear == true)
 			{
-				kField[j][height] = empty;
-				m_suspend = kSuspend;
+				//kField[j][height] = empty;
+				//m_suspend = kSuspend;
 			}
 		}
 
